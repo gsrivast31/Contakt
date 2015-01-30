@@ -1,0 +1,20 @@
+//
+//  Contakt_Prefix.pch
+//  Contakt
+//
+//  Created by GAURAV SRIVASTAVA on 18/01/15.
+//  Copyright (c) 2015 GAURAV SRIVASTAVA. All rights reserved.
+//
+
+#ifndef Contakt_Contakt_Prefix_pch
+#define Contakt_Contakt_Prefix_pch
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "CKCommon.h"
+#import "CKHelper.h"
+#import "CKCredentials.h"
+#endif
+
+#endif
