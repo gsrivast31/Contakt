@@ -211,9 +211,8 @@
 
     PFQuery *query = [PFQuery queryWithClassName:@"ProfileImages"];
     [query whereKey:@"user" equalTo:user];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error == nil && [objects count]) {
-            PFObject* object = [objects objectAtIndex:0];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (error == nil && object) {
             PFFile* imageFile = [object objectForKey:@"imageFile"];
             NSURL* url = [[NSURL alloc] initWithString:imageFile.url];
             NSURLSession* session = [NSURLSession sharedSession];
@@ -256,16 +255,24 @@
     PFFile *file = [PFFile fileWithName:fileName data:fileData];
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (error == nil) {
-            PFObject *message = [PFObject objectWithClassName:@"ProfileImages"];
-            [message setObject:file forKey:@"imageFile"];
-            [message setObject:user forKey:@"user"];
-            [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    [[SAMCache sharedCache] setImage:image forKey:user];
-                    successCallback();
+            PFQuery *query = [PFQuery queryWithClassName:@"ProfileImages"];
+            [query whereKey:@"user" equalTo:user];
+            [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                if (object == nil) {
+                    object = [PFObject objectWithClassName:@"ProfileImages"];
+                    [object setObject:file forKey:@"imageFile"];
+                    [object setObject:user forKey:@"user"];
                 } else {
-                    failureCallback(error);
+                    [object setObject:file forKey:@"imageFile"];
                 }
+                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        [[SAMCache sharedCache] setImage:image forKey:user];
+                        successCallback();
+                    } else {
+                        failureCallback(error);
+                    }
+                }];
             }];
         } else {
             failureCallback(error);
