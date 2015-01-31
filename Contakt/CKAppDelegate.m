@@ -35,16 +35,8 @@
 
     [self setupSources];
     
-    [Parse setApplicationId:@"Fp36xotAPA1RjmsiX34lRB9R4lDAMCAB8E723ZFr"
-                  clientKey:@"8rS44z220bQD4apwnVAnOmUzakgbgvH6WWNIP1yQ"];
-    
-    // Register for Push Notitications
-    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                    UIUserNotificationTypeBadge |
-                                                    UIUserNotificationTypeSound);
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
-    [application registerUserNotificationSettings:settings];
-    [application registerForRemoteNotifications];
+    [Parse setApplicationId:PARSE_API_ID
+                  clientKey:PARSE_CLIENT_KEY];
     
     NSString *currentProfile = [[NSUserDefaults standardUserDefaults] valueForKey:kCurrentProfileString];
     if ([CKHelper isStringValid:currentProfile]) {
@@ -83,17 +75,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [[CKCoreDataStack defaultStack] saveContext];
-}
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    // Store the deviceToken in the current installation and save it to Parse.
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveInBackground];
-}
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
 }
 
 @end

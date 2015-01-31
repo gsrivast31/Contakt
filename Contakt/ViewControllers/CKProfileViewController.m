@@ -83,8 +83,10 @@ static NSString * const reuseIdentifier2 = @"connectionViewCell";
 
 - (void)openLink:(id)sender {
     CKButton* button = (CKButton*)sender;
-    if ([CKHelper isStringValid:button.link]) {
-        SVWebViewController* vc = [[SVWebViewController alloc] initWithAddress:button.link];
+    if ([CKHelper isStringValid:button.nativeLink] && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:button.nativeLink]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:button.nativeLink]];
+    } else {
+        SVWebViewController* vc = [[SVWebViewController alloc] initWithAddress:button.remoteLink];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

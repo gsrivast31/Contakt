@@ -9,6 +9,7 @@
 #import "CKQRCodeReaderViewController.h"
 #import "CKCoreDataStack.h"
 #import "CKContact.h"
+#import "FlatUIKit.h"
 #import <AVFoundation/AVFoundation.h>
 
 
@@ -18,6 +19,9 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic) BOOL isReading;
+
+@property (weak, nonatomic) IBOutlet UIView *videoPreview;
+@property (weak, nonatomic) IBOutlet UIButton *videoButton;
 
 -(BOOL)startReading;
 -(void)stopReading;
@@ -31,6 +35,13 @@
     
     _captureSession = nil;
     _isReading = NO;
+    
+    self.videoButton.titleLabel.font = [UIFont flatFontOfSize:16];
+    [self.videoButton setTitle:@"Stop" forState:UIControlStateNormal];
+    self.videoButton.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(stopCamera)];
+    [self.videoButton addGestureRecognizer:gesture];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,6 +49,10 @@
 }
 
 #pragma mark - Private method implementation
+
+- (void)stopCamera {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (BOOL)startReading {
     NSError *error;
@@ -73,8 +88,8 @@
     // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
     _videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
     [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [_videoPreviewLayer setFrame:self.view.frame];
-    [self.view.layer addSublayer:_videoPreviewLayer];
+    [_videoPreviewLayer setFrame:self.videoPreview.frame];
+    [self.videoPreview.layer addSublayer:_videoPreviewLayer];
     
     // Start video capture.
     [_captureSession startRunning];

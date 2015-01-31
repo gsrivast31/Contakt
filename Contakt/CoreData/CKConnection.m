@@ -16,9 +16,7 @@
 @dynamic type;
 @dynamic imageUrl;
 @dynamic profileUrl;
-@dynamic name;
 @dynamic value;
-@dynamic email;
 @dynamic contact;
 
 @end

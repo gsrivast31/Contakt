@@ -35,10 +35,16 @@
     BOOL enableFB = [(CKConnection*)[dict objectForKey:kFacebookString] share];
     BOOL enableTwitter= [(CKConnection*)[dict objectForKey:kTwitterString] share];
     BOOL enableLinkedIn = [(CKConnection*)[dict objectForKey:kLinkedInString] share];
-    NSString *facebookUrl = [(CKConnection*)[dict objectForKey:kFacebookString] profileUrl];
-    NSString *twitterUrl = [(CKConnection*)[dict objectForKey:kTwitterString] profileUrl];
-    NSString *linkedinUrl = [(CKConnection*)[dict objectForKey:kLinkedInString] profileUrl];
-    
+    NSString *facebookRemoteUrl = [(CKConnection*)[dict objectForKey:kFacebookString] profileUrl];
+    NSString *twitterRemoteUrl = [(CKConnection*)[dict objectForKey:kTwitterString] profileUrl];
+    NSString *linkedinRemoteUrl = [(CKConnection*)[dict objectForKey:kLinkedInString] profileUrl];
+    NSString *facebookId = [(CKConnection*)[dict objectForKey:kFacebookString] value];
+    NSString *twitterId = [(CKConnection*)[dict objectForKey:kTwitterString] value];
+    NSString *linkedinId = [(CKConnection*)[dict objectForKey:kLinkedInString] value];
+    NSString *facebookNativeURL = [CKHelper isStringValid:facebookId] ? [@"fb://profile/" stringByAppendingString:facebookId] : nil;
+    NSString *twitterNativeURL = [CKHelper isStringValid:facebookId] ? [@"twitter://user?id=" stringByAppendingString:twitterId] : nil;
+    NSString *linkedInNativeURL = [CKHelper isStringValid:facebookId] ? [@"linkedin://#profile/" stringByAppendingString:linkedinId] : nil;
+                                                                   
     self.fbButton.titleLabel.font = [UIFont iconFontWithSize:16];
     self.fbButton.buttonColor = [UIColor colorFromHexCode:@"3b5998"];
     self.fbButton.shadowColor = [UIColor colorFromHexCode:@"3b5998"];
@@ -47,7 +53,8 @@
     self.fbButton.shadowHeight = 3.0f;
     self.fbButton.cornerRadius = 6.0f;
     [self.fbButton setTitle:[NSString stringWithFormat:@"%@ Facebook", [NSString iconStringForEnum:FUIFacebook]] forState:UIControlStateNormal];
-    [self.fbButton setLink:facebookUrl];
+    [self.fbButton setRemoteLink:facebookRemoteUrl];
+    [self.fbButton setNativeLink:facebookNativeURL];
     [self.fbButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
     self.twitterButton.titleLabel.font = [UIFont iconFontWithSize:16];
@@ -58,7 +65,8 @@
     self.twitterButton.shadowHeight = 3.0f;
     self.twitterButton.cornerRadius = 6.0f;
     [self.twitterButton setTitle:[NSString stringWithFormat:@"%@ Twitter", [NSString iconStringForEnum:FUITwitter]] forState:UIControlStateNormal];
-    [self.twitterButton setLink:twitterUrl];
+    [self.twitterButton setRemoteLink:twitterRemoteUrl];
+    [self.twitterButton setNativeLink:twitterNativeURL];
     [self.twitterButton setTitleColor:[UIColor cloudsColor] forState:UIControlStateNormal];
 
     self.linkedinButton.titleLabel.font = [UIFont iconFontWithSize:16];
@@ -69,7 +77,8 @@
     self.linkedinButton.shadowHeight = 3.0f;
     self.linkedinButton.cornerRadius = 6.0f;
     [self.linkedinButton setTitle:[NSString stringWithFormat:@"%@ LinkedIn", [NSString iconStringForEnum:FUILinkedin]] forState:UIControlStateNormal];
-    [self.linkedinButton setLink:linkedinUrl];
+    [self.linkedinButton setRemoteLink:linkedinRemoteUrl];
+    [self.linkedinButton setNativeLink:linkedInNativeURL];
     [self.linkedinButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
     self.nameButton.backgroundColor = self.emailButton.backgroundColor = self.phoneButton.backgroundColor = self.nameLabel.backgroundColor = self.emailLabel.backgroundColor = self.phoneLabel.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
@@ -112,21 +121,21 @@
         self.phoneLabel.font = [UIFont italicFlatFontOfSize:14];
     }
 
-    if (enableFB && [CKHelper isStringValid:facebookUrl]) {
+    if (enableFB) {
         self.fbButton.enabled = YES;
         self.fbButton.userInteractionEnabled = YES;
     } else {
         self.fbButton.enabled = NO;
     }
     
-    if (enableTwitter && [CKHelper isStringValid:twitterUrl]) {
+    if (enableTwitter) {
         self.twitterButton.enabled = YES;
         self.twitterButton.userInteractionEnabled = YES;
     } else {
         self.twitterButton.enabled = NO;
     }
 
-    if (enableLinkedIn && [CKHelper isStringValid:linkedinUrl]) {
+    if (enableLinkedIn) {
         self.linkedinButton.enabled = YES;
         self.linkedinButton.userInteractionEnabled = YES;
     } else {

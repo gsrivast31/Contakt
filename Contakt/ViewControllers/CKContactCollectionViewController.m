@@ -15,13 +15,16 @@
 #import "CKCoreDataStack.h"
 #import "CKAppDelegate.h"
 #import "FlatUIKit.h"
+#import "CKConnection.h"
+#import <MessageUI/MessageUI.h>
+#import "SVWebViewController.h"
 
-@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
-{
-    UISearchController* searchController;
-}
+@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate>
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
+@property(nonatomic,strong) UISearchBar *searchBar;
+@property(nonatomic) BOOL searchBarActive;
+@property(nonatomic) float searchBarBoundsY;
 
 @end
 
@@ -36,17 +39,17 @@ static NSString * const reuseIdentifier = @"contactCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Register cell classes
-    //[self.collectionView registerClass:[CKContactCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    
     CGFloat width = [[UIScreen mainScreen] bounds].size.width;
-    
     self.layout.numberOfItemsPerLine = floor(width/106.0f);
     self.layout.aspectRatio = 1;
     self.layout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
     self.layout.interitemSpacing = 10;
     self.layout.lineSpacing = 10;
-    
+
+    [self prepareSearchBar];
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.searchBar.frame.size.height, 5, 0, 5);
+    self.collectionView.contentOffset = CGPointMake(0, -self.searchBar.frame.size.height);
+
     [self.fetchedResultsController performFetch:nil];
     
     UIBarButtonItem *menuBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"NavBarIconListMenu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(presentLeftMenuViewController:)];
@@ -59,11 +62,28 @@ static NSString * const reuseIdentifier = @"contactCell";
     [super didReceiveMemoryWarning];
 }
 
+- (void)prepareSearchBar{
+    if (!self.searchBar) {
+        self.searchBarBoundsY = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+        self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, self.searchBarBoundsY, [UIScreen mainScreen].bounds.size.width, 44)];
+        self.searchBar.searchBarStyle       = UISearchBarStyleMinimal;
+        self.searchBar.showsCancelButton    = YES;
+        self.searchBar.tintColor            = [UIColor whiteColor];
+        self.searchBar.barTintColor         = [UIColor whiteColor];
+        self.searchBar.delegate             = self;
+        self.searchBar.placeholder          = @"search here";
+        
+        [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor whiteColor]];
+        
+        [self.view addSubview:self.searchBar];
+    }
+}
+
 #pragma mark CKQRCodeReaderDelegate
 
 - (void)didReadQRCode:(NSString *)string {
     CKContact* contact = [CKHelper deserialize:string];
-    contact.guid = [CKHelper generateUniqueGuid];
+    NSLog(@"%@", contact.guid);
     [[CKCoreDataStack defaultStack] saveContext];
     
     [self.collectionView reloadData];
@@ -99,12 +119,11 @@ static NSString * const reuseIdentifier = @"contactCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     CKContact *contact = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    //CKFullContactViewController* vc = (CKFullContactViewController*)[CKHelper viewControllerWithId:@"fullContactViewController"];
-    //vc.contact = contact;
-    //[self presentViewController:vc animated:YES completion:nil];
-    CKAppDelegate *delegate = (CKAppDelegate*)[[UIApplication sharedApplication] delegate];
-    //CKContactView* contactView = [CKContactView presentInView:delegate.window.rootViewController.view withContact:contact];
-    CKConnectionView* view = [CKConnectionView presentInView:delegate.window.rootViewController.view withContact:contact];
+    [CKConnectionView presentInView:self.view withContact:contact withDelegate:self];
+}
+
+- (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    return nil;
 }
 
 #pragma mark NSFetchedResultsControllerDelegate
@@ -272,21 +291,127 @@ static NSString * const reuseIdentifier = @"contactCell";
     return shouldReload;
 }
 
-#pragma mark - UISearchBarDelegate
+#pragma mark - search
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [searchBar resignFirstResponder];
-    [searchController setActive:NO];
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
 }
 
-#pragma mark - UISearchControllerDelegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+}
 
-#pragma mark - UISearchResultsUpdating
-
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchViewController {
-    //[self performSearchWithText:searchViewController.searchBar.text];
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    self.searchBarActive = NO;
+    searchBar.text       = @"";
+    [searchBar resignFirstResponder];
     [self.collectionView reloadData];
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    self.searchBarActive = YES;
+    [self.view endEditing:YES];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    self.searchBarActive = YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+    self.searchBarActive = NO;
+}
+
+#pragma mark - observer
+- (void)addObservers{
+    [self.collectionView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+}
+- (void)removeObservers{
+    [self.collectionView removeObserver:self forKeyPath:@"contentOffset" context:Nil];
+}
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(UICollectionView *)object change:(NSDictionary *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"contentOffset"] && object == self.collectionView ) {
+        
+        self.searchBar.frame = CGRectMake(self.searchBar.frame.origin.x,
+                                          (-1* object.contentOffset.y)-self.searchBar.frame.size.height,
+                                          self.searchBar.frame.size.width,
+                                          self.searchBar.frame.size.height);
+    }
+}
+
+#pragma mark CKConnectionViewDelegate
+
+- (void)didTapButton:(NSInteger)type forContact:(CKContact *)contact {
+    NSDictionary* dict = [CKHelper connectionDictionary:contact];
+
+    if (type == CKEmailType) {
+        NSString *email = [(CKConnection*)[dict objectForKey:kEmailString] value];
+        if([MFMailComposeViewController canSendMail]) {
+            MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+            [mailController setMailComposeDelegate:self];
+            [mailController setModalPresentationStyle:UIModalPresentationFormSheet];
+            [mailController setToRecipients:@[email]];
+            if(mailController) {
+                [self presentViewController:mailController animated:YES completion:nil];
+            }
+        } else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Uh oh!", nil)
+                                                                message:NSLocalizedString(@"This device hasn't been setup to send emails.", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:NSLocalizedString(@"Okay", nil)
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
+    } else if (type == CKPhoneType) {
+        NSString *phone = [(CKConnection*)[dict objectForKey:kPhoneString] value];
+        if ([CKHelper isStringValid:phone]) {
+            NSString* phoneNumber = [@"tel://" stringByAppendingString:phone];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+        }
+    } else if (type == CKFacebookType) {
+        NSString* fbId = [(CKConnection*)[dict objectForKey:kFacebookString] value];
+        NSURL* fbURL = [NSURL URLWithString:[@"fb://profile/" stringByAppendingString:fbId]];
+        if ([CKHelper isStringValid:fbId] && [[UIApplication sharedApplication] canOpenURL:fbURL]) {
+            [[UIApplication sharedApplication] openURL:fbURL];
+        } else {
+            NSString* fbProfile = [(CKConnection*)[dict objectForKey:kFacebookString] profileUrl];
+            if ([CKHelper isStringValid:fbProfile]) {
+                SVWebViewController* vc = [[SVWebViewController alloc] initWithAddress:fbProfile];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+        }
+    } else if (type == CKTwitterType) {
+        NSString* twitterId = [(CKConnection*)[dict objectForKey:kTwitterString] value];
+        NSURL* twitterURL = [NSURL URLWithString:[@"twitter://user?id=" stringByAppendingString:twitterId]];
+        if ([CKHelper isStringValid:twitterId] && [[UIApplication sharedApplication] canOpenURL:twitterURL]) {
+            [[UIApplication sharedApplication] openURL:twitterURL];
+        } else {
+            NSString* twitterProfile = [(CKConnection*)[dict objectForKey:kTwitterString] profileUrl];
+            if ([CKHelper isStringValid:twitterProfile]) {
+                SVWebViewController* vc = [[SVWebViewController alloc] initWithAddress:twitterProfile];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+        }
+    } else if (type == CKPhoneType) {
+        NSString* linkedinId = [(CKConnection*)[dict objectForKey:kLinkedInString] value];
+        NSURL* linkedInURL = [NSURL URLWithString:[@"linkedin://#profile/" stringByAppendingString:linkedinId]];
+        if ([CKHelper isStringValid:linkedinId] && [[UIApplication sharedApplication] canOpenURL:linkedInURL]) {
+            [[UIApplication sharedApplication] openURL:linkedInURL];
+        } else {
+            NSString* linkedinProfile = [(CKConnection*)[dict objectForKey:kLinkedInString] profileUrl];
+            if ([CKHelper isStringValid:linkedinProfile]) {
+                SVWebViewController* vc = [[SVWebViewController alloc] initWithAddress:linkedinProfile];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+        }
+    }
+}
+
+#pragma mark - MFMailComposeViewDelegate methods
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError*)error {
+    if (result == MFMailComposeResultSent) {
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end

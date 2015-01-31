@@ -23,6 +23,15 @@ NS_ENUM(int16_t, CKSourceType)
     CKLinkedInType = 6,
 };
 
+NS_ENUM(int16_t, CKImageType)
+{
+    CKImageLocal = 1,
+    CKImageFacebook = 2,
+    CKImageTwitter = 3,
+    CKImageLinkedIn = 4,
+    CKImageNone = 5
+};
+
 static NSString* const APP_ID = @"";
 
 static NSString* const kNameString = @"Name";

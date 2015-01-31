@@ -9,7 +9,6 @@ pod 'KRLCollectionViewGridLayout'
 pod 'Vertigo'
 pod 'RESideMenu', '~> 4.0.7'
 pod 'REComposeViewController', '~> 2.3.2'
-pod 'CKCircleMenuView'
 pod 'FXBlurView'
 pod 'UAAppReviewManager', '~> 0.2.6'
 pod 'SimpleAuth/FacebookWeb'
@@ -18,6 +17,7 @@ pod 'SimpleAuth/LinkedInWeb'
 pod 'SimpleAuth/TwitterWeb'
 pod 'SimpleAuth/Twitter'
 pod 'MGSwipeTableCell'
+pod 'SAMCache'
 
 end
 

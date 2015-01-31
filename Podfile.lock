@@ -18,6 +18,7 @@ PODS:
     - ReactiveCocoa/Core
   - REComposeViewController (2.3.2)
   - RESideMenu (4.0.7)
+  - SAMCache (0.3.0)
   - SimpleAuth/Core (0.3.6):
     - CMDQueryStringSerialization
     - ReactiveCocoa
@@ -48,6 +49,7 @@ DEPENDENCIES:
   - MGSwipeTableCell
   - REComposeViewController (~> 2.3.2)
   - RESideMenu (~> 4.0.7)
+  - SAMCache
   - SimpleAuth/Facebook
   - SimpleAuth/FacebookWeb
   - SimpleAuth/LinkedInWeb
@@ -68,6 +70,7 @@ SPEC CHECKSUMS:
   ReactiveCocoa: 31119068e3dde866bd257cf74e1f06b4023bf387
   REComposeViewController: ecdf1f4799a69c029258c56aca130276e7975f74
   RESideMenu: a9c1cd2e64e60e1d3166ddac01a83e215a0e4d30
+  SAMCache: ab96161f1938a85b0fd426958fc7f36e29a9fe27
   SimpleAuth: 0664e22bff27c7f5b169254b421b1c761d002f65
   UAAppReviewManager: f23428de9c9cd242c2ffd899e218ba3620bd0683
   Vertigo: 606222b572b2f54d5a85329b7afe1436a4859e89

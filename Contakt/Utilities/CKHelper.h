@@ -18,5 +18,4 @@
 + (UIViewController*)viewControllerWithId:(NSString*)string;
 + (BOOL)isStringValid:(NSString*)string;
 + (NSDictionary*)connectionDictionary:(CKContact*)contact;
-
 @end

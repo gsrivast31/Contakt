@@ -13,7 +13,6 @@
 
 @interface CKContact : NSManagedObject
 
-@property (nonatomic, retain) NSString * imagePath;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSSet *connections;

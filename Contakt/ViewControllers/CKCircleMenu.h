@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CKConnectionView.h"
 
 #define kKYCircleMenuViewHeight CGRectGetHeight([UIScreen mainScreen].applicationFrame)
 #define kKYCircleMenuViewWidth  CGRectGetWidth([UIScreen mainScreen].applicationFrame)
 #define kKYCircleMenuNavigationBarHeight 44.f
+
+@class CKContact;
 
 @interface CKCircleMenu : UIView
 {
@@ -28,14 +31,16 @@
 @property (nonatomic, assign) BOOL       isOpening;
 @property (nonatomic, assign) BOOL       isInProcessing;
 @property (nonatomic, assign) BOOL       isClosed;
+@property (nonatomic, assign) id<CKConnectionViewDelegate> delegate;
 
 - (instancetype)initWithMenuSize:(CGFloat)menuSize
                          buttonSize:(CGFloat)buttonSize
                    centerButtonSize:(CGFloat)centerButtonSize
-                          titleName:(NSString*)title
-              centerButtonImageName:(NSString *)centerButtonImageName;
+                         contact:(CKContact*)contact
+                        delegate:(id<CKConnectionViewDelegate>)delegate;
 
 - (void)runButtonActions:(id)sender;
 - (void)open;
+- (void)close;
 - (void)recoverToNormalStatus;
 @end

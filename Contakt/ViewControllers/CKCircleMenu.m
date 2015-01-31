@@ -9,18 +9,17 @@
 #import "CKCircleMenu.h"
 #import "CKMediaController.h"
 #import "FlatUIKit.h"
+#import "CKContact.h"
 
 @interface CKCircleMenu()
 {
     NSInteger buttonCount_;
     CGRect    buttonOriginFrame_;
-    NSString *centerButtonImageName_;
-    NSString *titleName_;
+    CKContact* contact_;
     BOOL shouldRecoverToNormalStatusWhenViewWillAppear_;
 }
 
-@property (nonatomic, copy) NSString * centerButtonImageName;
-@property (nonatomic, copy) NSString * titleName;
+@property (nonatomic, copy) CKContact *contact;
 
 - (void)_toggle:(id)sender;
 - (void)_close:(NSNotification *)notification;
@@ -40,8 +39,8 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 @synthesize isOpening      = isOpening_;
 @synthesize isInProcessing = isInProcessing_;
 @synthesize isClosed       = isClosed_;
-@synthesize centerButtonImageName = centerButtonImageName_;
-@synthesize titleName = titleName_;
+@synthesize contact        = contact_;
+@synthesize delegate       = delegate_;
 
 - (void)dealloc {
     // Release subvies & remove notification observer
@@ -50,20 +49,19 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 
 // Designated initializer
 - (instancetype)initWithMenuSize:(CGFloat)menuSize
-                         buttonSize:(CGFloat)buttonSize
-                   centerButtonSize:(CGFloat)centerButtonSize
-                          titleName:(NSString*)title
-              centerButtonImageName:(NSString *)centerButtonImageName
-{
+                      buttonSize:(CGFloat)buttonSize
+                centerButtonSize:(CGFloat)centerButtonSize
+                         contact:(CKContact *)contact
+                        delegate:(id<CKConnectionViewDelegate>)delegate {
     if (self = [self init]) {
-        buttonCount_                     = 6;
+        buttonCount_                     = 5;
         menuSize_                        = menuSize;
         buttonSize_                      = buttonSize;
         centerButtonSize_                = centerButtonSize;
-        centerButtonImageName_           = centerButtonImageName;
-        titleName_                       = title;
+        contact_                         = contact;
+        delegate_                        = delegate;
         
-        // Defualt value for triangle hypotenuse
+        // Default value for triangle hypotenuse
         defaultTriangleHypotenuse_     = (menuSize - buttonSize) * .5f;
         minBounceOfTriangleHypotenuse_ = defaultTriangleHypotenuse_ - 12.f;
         maxBounceOfTriangleHypotenuse_ = defaultTriangleHypotenuse_ + 12.f;
@@ -143,15 +141,11 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
     centerButton_.layer.shouldRasterize = YES;
     centerButton_.clipsToBounds = YES;
     
-    if (centerButtonImageName_) {
-        [[CKMediaController sharedInstance] imageWithFilenameAsync:centerButtonImageName_ success:^(UIImage *image) {
-            [centerButton_ setImage:image forState:UIControlStateNormal];
-        } failure:^{
-            [centerButton_ setImage:[UIImage imageNamed:@"defaultProfile"] forState:UIControlStateNormal];
-        }];
-    } else {
+    [[CKMediaController sharedInstance] imageFromParse:contact_.guid success:^(UIImage *image) {
+        [centerButton_ setImage:image forState:UIControlStateNormal];
+    } failure:^(NSError *error) {
         [centerButton_ setImage:[UIImage imageNamed:@"defaultProfile"] forState:UIControlStateNormal];
-    }
+    }];
 
     [centerButton_ addTarget:self action:@selector(_toggle:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:centerButton_];
@@ -160,7 +154,7 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 - (void)addTitle {
     CGRect titleFrame = CGRectMake(10.0f, self.menu.frame.origin.y - 50.0f, self.frame.size.width - 20.0f, 30.0f);
     titleLabel_ = [[UILabel alloc] initWithFrame:titleFrame];
-    titleLabel_.text = titleName_;
+    titleLabel_.text = contact_.name;
     titleLabel_.textAlignment = NSTextAlignmentCenter;
     titleLabel_.font = [UIFont flatFontOfSize:25.0f];
     titleLabel_.textColor = [UIColor whiteColor];
@@ -172,17 +166,7 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 - (void)runButtonActions:(id)sender {
     shouldRecoverToNormalStatusWhenViewWillAppear_ = YES;
     NSInteger tag = [sender tag] + 1;
-    if (tag == CKEmailType) {
-        
-    } else if (tag == CKPhoneType) {
-        
-    } else if (tag == CKFacebookType) {
-        
-    } else if (tag == CKTwitterType) {
-        
-    } else if (tag == CKLinkedInType) {
-        
-    }
+    [delegate_ didTapButton:tag forContact:contact_];
 }
 
 // Open center menu view
@@ -234,6 +218,10 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
                                           }
                                           completion:nil];
                      }];
+}
+
+- (void)close {
+    [self _close:nil];
 }
 
 #pragma mark - Private Methods

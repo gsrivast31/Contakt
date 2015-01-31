@@ -10,11 +10,18 @@
 
 @class CKContact;
 
+@protocol CKConnectionViewDelegate<NSObject>
+
+- (void)didTapButton:(NSInteger)type forContact:(CKContact*)contact;
+
+@end
+
 @interface CKConnectionView : FXBlurView
 
 @property (nonatomic, strong) CKContact* contact;
+@property (nonatomic, assign) id<CKConnectionViewDelegate> delegate;
 
 // Setup
-+ (id)presentInView:(UIView *)parentView withContact:(CKContact*)ckContact;
++ (id)presentInView:(UIView *)parentView withContact:(CKContact*)ckContact withDelegate:(id<CKConnectionViewDelegate>)delegate;
 
 @end

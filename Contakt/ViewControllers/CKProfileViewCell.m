@@ -44,15 +44,12 @@
 - (void)configureCellWithContact:(CKContact*)contact {
     [self loadQRCode:contact];
     
-    if ([CKHelper isStringValid:contact.imagePath]) {
-        [[CKMediaController sharedInstance] imageWithFilenameAsync:contact.imagePath success:^(UIImage *image) {
-            self.profileImageView.image = image;
-        } failure:^{
-            self.profileImageView.image = [UIImage imageNamed:@"defaultProfile"];
-        }];
-    } else {
+    [[CKMediaController sharedInstance] imageFromParse:contact.guid success:^(UIImage *image) {
+        self.profileImageView.image = image;
+    } failure:^(NSError* error){
         self.profileImageView.image = [UIImage imageNamed:@"defaultProfile"];
-    }
+        NSLog(@"%@", [error localizedDescription]);
+    }];
     
     self.profileImageView.backgroundColor = [UIColor clearColor];
     self.profileImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;

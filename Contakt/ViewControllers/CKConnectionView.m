@@ -15,17 +15,18 @@
 @synthesize contact;
 
 #pragma mark - Setup
-+ (id)presentInView:(UIView *)parentView withContact:(CKContact*)ckContact {
-    CKConnectionView *view = [[CKConnectionView alloc] initWithFrame:parentView.bounds withContact:ckContact];
++ (id)presentInView:(UIView *)parentView withContact:(CKContact*)ckContact withDelegate:(id<CKConnectionViewDelegate>)delegate {
+    CKConnectionView *view = [[CKConnectionView alloc] initWithFrame:parentView.bounds withContact:ckContact withDelegate:delegate];
     [parentView addSubview:view];
     
     return view;
 }
 
-- (id)initWithFrame:(CGRect)frame withContact:(CKContact*)ckContact {
+- (id)initWithFrame:(CGRect)frame withContact:(CKContact*)ckContact withDelegate:(id<CKConnectionViewDelegate>)ckDelegate {
     self = [super initWithFrame:frame];
     if (self) {
         self.contact = ckContact;
+        self.delegate = ckDelegate;
         self.tintColor = [UIColor clearColor];
         self.dynamic = NO;
         self.blurRadius = 10.0f;
@@ -41,10 +42,10 @@
 
 - (void)setupConnections {
     CKCircleMenu* circleMenu = [[CKCircleMenu alloc] initWithMenuSize:280.0f
-                                             buttonSize:64.0f
-                                       centerButtonSize:120.0f
-                                              titleName:self.contact.name
-                                  centerButtonImageName:self.contact.imagePath];
+                                                           buttonSize:64.0f
+                                                     centerButtonSize:120.0f
+                                                              contact:contact
+                                                             delegate:self.delegate];
     [self addSubview:circleMenu];
 
 }

@@ -17,9 +17,7 @@
 @property (nonatomic) int16_t type;
 @property (nonatomic, retain) NSString * imageUrl;
 @property (nonatomic, retain) NSString * profileUrl;
-@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * value;
-@property (nonatomic, retain) NSString * email;
 @property (nonatomic, retain) CKContact *contact;
 
 @end

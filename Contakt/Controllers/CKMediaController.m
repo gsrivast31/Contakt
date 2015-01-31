@@ -7,6 +7,8 @@
 //
 
 #import "CKMediaController.h"
+#import <SAMCache/SAMCache.h>
+#import <Parse/Parse.h>
 
 @interface CKMediaController()
 
@@ -122,7 +124,7 @@
 
 - (void)imageWithFilenameAsync:(NSString *)filename
                        success:(void (^)(UIImage *))successCallback
-                       failure:(void (^)(void))failureCallback {
+                       failure:(void (^)(NSError *))failureCallback {
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
@@ -147,8 +149,128 @@
             }
         }
         
-        if(failureCallback) failureCallback();
+        if(failureCallback) failureCallback(nil);
     });
+}
+
+- (void)imageFromURL:(NSDictionary *)photo
+              success:(void (^)(UIImage *))successCallback
+              failure:(void (^)(NSError *))failureCallback {
+    
+    if (photo == nil || successCallback == nil) {
+        return;
+    }
+    
+    BOOL isLocal = ([photo[@"pathType"] intValue] == CKImageLocal);
+    if (isLocal) {
+        [[CKMediaController sharedInstance] imageWithFilenameAsync:photo[@"url"] success:successCallback failure:failureCallback];
+        return;
+    }
+    
+    NSString *key = photo[@"id"];
+    key = [key stringByAppendingFormat:@"%d", [photo[@"pathType"] intValue]];
+    UIImage *image = [[SAMCache sharedCache] imageForKey:key];
+    if (image) {
+        successCallback(image);
+        return;
+    }
+    
+    NSURL *url = [[NSURL alloc] initWithString:photo[@"url"]];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+    NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+        NSData *data = [[NSData alloc] initWithContentsOfURL:location];
+        UIImage *image = [[UIImage alloc] initWithData:data];
+        [[SAMCache sharedCache] setImage:image forKey:key];
+        
+        if (error == nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                successCallback(image);
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failureCallback(error);
+            });
+        }
+    }];
+    [task resume];
+}
+
+- (void)imageFromParse:(NSString*)user
+               success:(void (^)(UIImage*))successCallback
+               failure:(void (^)(NSError *error))failureCallback {
+    if (user == nil || successCallback == nil) {
+        return;
+    }
+
+    UIImage *image = [[SAMCache sharedCache] imageForKey:user];
+    if (image) {
+        successCallback(image);
+        return;
+    }
+
+    PFQuery *query = [PFQuery queryWithClassName:@"ProfileImages"];
+    [query whereKey:@"user" equalTo:user];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error == nil && [objects count]) {
+            PFObject* object = [objects objectAtIndex:0];
+            PFFile* imageFile = [object objectForKey:@"imageFile"];
+            NSURL* url = [[NSURL alloc] initWithString:imageFile.url];
+            NSURLSession* session = [NSURLSession sharedSession];
+            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+            NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+                NSData *data = [[NSData alloc] initWithContentsOfURL:location];
+                UIImage *image = [[UIImage alloc] initWithData:data];
+                [[SAMCache sharedCache] setImage:image forKey:user];
+                
+                if (error == nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        successCallback(image);
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        failureCallback(error);
+                    });
+                }
+            }];
+            [task resume];
+        } else {
+            failureCallback(error);
+        }
+    }];
+}
+
+- (void)saveToParse:(UIImage*)image
+            forUser:(NSString *)user
+            success:(void (^)(void))successCallback
+            failure:(void (^)(NSError *error))failureCallback {
+    NSData *fileData;
+    NSString *fileName;
+    
+    if (image != nil) {
+        UIImage *newImage = [self resizeImage:image toSize:CGSizeMake(160.0f, 160.0f)];
+        fileData = UIImagePNGRepresentation(newImage);
+        fileName = [user stringByAppendingString:@".jpg"];
+    }
+    
+    PFFile *file = [PFFile fileWithName:fileName data:fileData];
+    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error == nil) {
+            PFObject *message = [PFObject objectWithClassName:@"ProfileImages"];
+            [message setObject:file forKey:@"imageFile"];
+            [message setObject:user forKey:@"user"];
+            [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (!error) {
+                    [[SAMCache sharedCache] setImage:image forKey:user];
+                    successCallback();
+                } else {
+                    failureCallback(error);
+                }
+            }];
+        } else {
+            failureCallback(error);
+        }
+    }];
 }
 
 #pragma mark - Helpers

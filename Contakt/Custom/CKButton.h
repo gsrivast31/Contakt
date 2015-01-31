@@ -10,6 +10,7 @@
 
 @interface CKButton : FUIButton
 
-@property(nonatomic, strong, readwrite) NSString* link;
+@property(nonatomic, strong, readwrite) NSString* nativeLink;
+@property(nonatomic, strong, readwrite) NSString* remoteLink;
 
 @end

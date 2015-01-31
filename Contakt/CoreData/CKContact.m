@@ -12,7 +12,6 @@
 
 @implementation CKContact
 
-@dynamic imagePath;
 @dynamic name;
 @dynamic guid;
 @dynamic connections;

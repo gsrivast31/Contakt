@@ -34,6 +34,8 @@
     NSString *phone;
     NSString *imagePath;
     
+    int16_t imagePathType;
+    
     BOOL connectMail;
     BOOL connectPhone;
     BOOL connectFB;
@@ -108,13 +110,11 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 
 - (void)loadProfile {
     name = contact.name;
-    imagePath = contact.imagePath;
     
     NSDictionary* dict = [CKHelper connectionDictionary:contact];
     CKConnection* mailConn = (CKConnection*)[dict objectForKey:kEmailString];
     CKConnection* phoneConn = (CKConnection*)[dict objectForKey:kPhoneString];
     CKConnection* fbConn = (CKConnection*)[dict objectForKey:kFacebookString];
-    NSLog(@"%@", fbConn.value);
     CKConnection* twitterConn = (CKConnection*)[dict objectForKey:kTwitterString];
     CKConnection* linkedinConn = (CKConnection*)[dict objectForKey:kLinkedInString];
 
@@ -125,27 +125,21 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 
     facebookDict = [NSDictionary dictionaryWithObjectsAndKeys:
                     [fbConn value], kProfileId,
-                    [fbConn email], kProfileEmail,
                     [fbConn imageUrl], kProfileImageUrl,
-                    [fbConn name], kProfileName,
                     [fbConn profileUrl], kProfileUrl,
                     nil];
     connectFB = [fbConn share];
     
     twitterDict = [NSDictionary dictionaryWithObjectsAndKeys:
                     [twitterConn value], kProfileId,
-                    [twitterConn email], kProfileEmail,
                     [twitterConn imageUrl], kProfileImageUrl,
-                    [twitterConn name], kProfileName,
                     [twitterConn profileUrl], kProfileUrl,
                     nil];
     connectTwitter = [twitterConn share];
 
     linkedinDict = [NSDictionary dictionaryWithObjectsAndKeys:
                     [linkedinConn value], kProfileId,
-                    [linkedinConn email], kProfileEmail,
                     [linkedinConn imageUrl], kProfileImageUrl,
-                    [linkedinConn name], kProfileName,
                     [linkedinConn profileUrl], kProfileUrl,
                     nil];
     connectLinkedIn = [linkedinConn share];
@@ -155,15 +149,12 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 }
 
 - (void)loadProfileImage {
-    if (imagePath) {
-        [[CKMediaController sharedInstance] imageWithFilenameAsync:imagePath success:^(UIImage *image) {
-            imageView.image = image;
-        } failure:^{
-            imageView.image = [UIImage imageNamed:@"defaultProfile"];
-        }];
-    } else {
+    [[CKMediaController sharedInstance] imageFromParse:contact.guid success:^(UIImage *image) {
+        imageView.image = image;
+    } failure:^(NSError *error) {
+        NSLog(@"%@", [error localizedDescription]);
         imageView.image = [UIImage imageNamed:@"defaultProfile"];
-    }
+    }];
 }
 
 - (void)changeUser:(UIGestureRecognizer*)gesture {
@@ -186,10 +177,46 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     }];
     
     [menuView addMenuItemWithTitle:@"Facebook" andIcon:[UIImage imageNamed:@"facebook"] andSelectedBlock:^{
+        NSString* imageUrl = facebookDict[kProfileImageUrl];
+        if ([CKHelper isStringValid:imageUrl]) {
+            [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageFacebook], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
+                [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
+                    imageView.image = image;
+                } failure:^(NSError *error) {
+                    NSLog(@"%@", [error localizedDescription]);
+                }];
+            } failure:^(NSError *error){
+                NSLog(@"%@", [error localizedDescription]);
+            }];
+        }
     }];
     [menuView addMenuItemWithTitle:@"Twitter" andIcon:[UIImage imageNamed:@"twitter"] andSelectedBlock:^{
+        NSString* imageUrl = twitterDict[kProfileImageUrl];
+        if ([CKHelper isStringValid:imageUrl]) {
+            [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageTwitter], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
+                [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
+                    imageView.image = image;
+                } failure:^(NSError *error) {
+                    NSLog(@"%@", [error localizedDescription]);
+                }];
+            } failure:^(NSError *error){
+                NSLog(@"%@", [error localizedDescription]);
+            }];
+        }
     }];
     [menuView addMenuItemWithTitle:@"LinkedIn" andIcon:[UIImage imageNamed:@"linkedin"] andSelectedBlock:^{
+        NSString* imageUrl = linkedinDict[kProfileImageUrl];
+        if ([CKHelper isStringValid:imageUrl]) {
+            [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageLinkedIn], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
+                [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
+                    imageView.image = image;
+                } failure:^(NSError *error) {
+                    NSLog(@"%@", [error localizedDescription]);
+                }];
+            } failure:^(NSError *error){
+                NSLog(@"%@", [error localizedDescription]);
+            }];
+        }
     }];
     [menuView show];
 }
@@ -199,11 +226,37 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 }
 
 - (void)save {
-    if (contact != nil) {
-        [self updateContact];
-    } else {
-        [self addContact];
+    contact.name = name;
+    
+    NSSet* set = [contact.connections mutableCopy];
+    for (CKConnection* item in set) {
+        if (item.type == CKEmailType) {
+            item.share = connectMail;
+            item.value = email;
+        } else if (item.type == CKPhoneType) {
+            item.share = connectPhone;
+            item.value = phone;
+        } else if (item.type == CKFacebookType) {
+            item.share = connectFB;
+            item.value = facebookDict[kProfileId];
+            item.profileUrl = facebookDict[kProfileUrl];
+            item.imageUrl = facebookDict[kProfileImageUrl];
+        } else if (item.type == CKTwitterType) {
+            item.share = connectTwitter;
+            item.value = twitterDict[kProfileId];
+            item.profileUrl = twitterDict[kProfileUrl];
+            item.imageUrl = twitterDict[kProfileImageUrl];
+        } else if (item.type == CKLinkedInType) {
+            item.share = connectLinkedIn;
+            item.value = linkedinDict[kProfileId];
+            item.profileUrl = linkedinDict[kProfileUrl];
+            item.imageUrl = linkedinDict[kProfileImageUrl];
+        }
     }
+    
+    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
+    [coreDataStack saveContext];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserSettingsChangedNotification object:nil];
 }
 
@@ -226,8 +279,6 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     fbConnection.value = facebookDict[kProfileId];
     fbConnection.profileUrl = facebookDict[kProfileUrl];
     fbConnection.imageUrl = facebookDict[kProfileImageUrl];
-    fbConnection.email = facebookDict[kProfileEmail];
-    fbConnection.name = facebookDict[kProfileName];
     
     CKConnection *twitterConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     twitterConnection.type = CKTwitterType;
@@ -235,8 +286,6 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     twitterConnection.value = twitterDict[kProfileId];
     twitterConnection.profileUrl = twitterDict[kProfileUrl];
     twitterConnection.imageUrl = twitterDict[kProfileImageUrl];
-    twitterConnection.email = twitterDict[kProfileEmail];
-    twitterConnection.name = twitterDict[kProfileName];
     
     CKConnection *linkedInConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     linkedInConnection.type = CKLinkedInType;
@@ -244,8 +293,6 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     linkedInConnection.value = linkedinDict[kProfileId];
     linkedInConnection.profileUrl = linkedinDict[kProfileUrl];
     linkedInConnection.imageUrl = linkedinDict[kProfileImageUrl];
-    linkedInConnection.email = linkedinDict[kProfileEmail];
-    linkedInConnection.name = linkedinDict[kProfileName];
     
     CKConnection *emailConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     emailConnection.type = CKEmailType;
@@ -260,37 +307,12 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     return [[NSSet alloc] initWithObjects:emailConnection, phoneConnection, fbConnection, twitterConnection, linkedInConnection, nil];
 }
 
-- (void)addContact {
-    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
-    CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
-    
-    newContact.name = name;
-    newContact.imagePath = imagePath;
-    newContact.guid = [CKHelper generateUniqueGuid];
-    newContact.connections = [self connections];
-    [coreDataStack saveContext];
-    
-    [[NSUserDefaults standardUserDefaults] setValue:newContact.guid forKey:kCurrentProfileString];
-}
-
-- (void)updateContact {
-    contact.name = name;
-    contact.imagePath = imagePath;
-    contact.connections = [self connections];
-    
-    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
-    [coreDataStack saveContext];
-}
-
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    imageView.image = image;
     
-    NSString* guid = self.contact ? self.contact.guid : @"";
-    NSString* fileName = [NSString stringWithFormat:@"%@_profile.jpg", guid];
-    [[CKMediaController sharedInstance] saveImage:[[CKMediaController sharedInstance] resizeImage:image toSize:CGSizeMake(160.0, 160.0)] withFilename:fileName success:^{
-        imagePath = fileName;
+    [[CKMediaController sharedInstance] saveToParse:image forUser:self.contact.guid success:^{
+        imageView.image = image;
     } failure:^(NSError *error) {
         NSLog(@"Failed to save file : %@", [error localizedDescription]);
     }];
@@ -464,12 +486,15 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = TRUE;
         facebookDict = userInfo;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = TRUE;
         twitterDict = userInfo;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:4]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = TRUE;
         linkedinDict = userInfo;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:5]] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -477,12 +502,15 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
         twitterDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:4]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
         linkedinDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:5]] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -490,12 +518,15 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
         twitterDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:4]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
         linkedinDict = nil;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:5]] withRowAnimation:UITableViewRowAnimationFade];
     }
     anyChanges = TRUE;
 }

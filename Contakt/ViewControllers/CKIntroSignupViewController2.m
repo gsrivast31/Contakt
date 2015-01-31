@@ -153,7 +153,6 @@
     CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
     
     newContact.name = _name;
-    newContact.imagePath = nil;
     newContact.guid = [CKHelper generateUniqueGuid];
     newContact.connections = [self connections];
     [coreDataStack saveContext];
@@ -174,8 +173,6 @@
     fbConnection.value = facebookDict[kProfileId];
     fbConnection.profileUrl = facebookDict[kProfileUrl];
     fbConnection.imageUrl = facebookDict[kProfileImageUrl];
-    fbConnection.email = facebookDict[kProfileEmail];
-    fbConnection.name = facebookDict[kProfileName];
     
     CKConnection *twitterConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     twitterConnection.type = CKTwitterType;
@@ -183,8 +180,6 @@
     twitterConnection.value = twitterDict[kProfileId];
     twitterConnection.profileUrl = twitterDict[kProfileUrl];
     twitterConnection.imageUrl = twitterDict[kProfileImageUrl];
-    twitterConnection.email = twitterDict[kProfileEmail];
-    twitterConnection.name = twitterDict[kProfileName];
     
     CKConnection *linkedInConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     linkedInConnection.type = CKLinkedInType;
@@ -192,8 +187,6 @@
     linkedInConnection.value = linkedinDict[kProfileId];
     linkedInConnection.profileUrl = linkedinDict[kProfileUrl];
     linkedInConnection.imageUrl = linkedinDict[kProfileImageUrl];
-    linkedInConnection.email = linkedinDict[kProfileEmail];
-    linkedInConnection.name = linkedinDict[kProfileName];
     
     CKConnection *emailConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     emailConnection.type = CKEmailType;

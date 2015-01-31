@@ -24,7 +24,19 @@
 - (UIImage *)imageWithFilename:(NSString *)filename;
 - (void)imageWithFilenameAsync:(NSString *)filename
                        success:(void (^)(UIImage *))successCallback
-                       failure:(void (^)(void))failureCallback;
+                       failure:(void (^)(NSError *))failureCallback;
+- (void)imageFromURL:(NSDictionary*)photo
+             success:(void (^)(UIImage *))successCallback
+              failure:(void (^)(NSError *))failureCallback;
+
+- (void)imageFromParse:(NSString*)user
+               success:(void (^)(UIImage*))successCallback
+               failure:(void (^)(NSError*))failureCallback;
+
+- (void)saveToParse:(UIImage*)image
+            forUser:(NSString*)user
+            success:(void (^)(void))successCallback
+            failure:(void (^)(NSError*))failureCallback;
 
 // Helpers
 - (UIImage *)resizeImage:(UIImage *)image
