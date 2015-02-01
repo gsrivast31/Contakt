@@ -157,7 +157,7 @@
 }
 
 - (void)saveProfile:(id)sender {
-    /*CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
+    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
     CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
     
     newContact.name = _name;
@@ -167,7 +167,6 @@
     
     [[NSUserDefaults standardUserDefaults] setValue:newContact.guid forKey:kCurrentProfileString];
     
-    //[self.navigationController pushViewController:[CKHelper viewControllerWithId:@"rootController"] animated:YES];*/
     CKRootViewController* vc = (CKRootViewController*)[CKHelper viewControllerWithId:@"rootController"];
     vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:vc animated:YES completion:nil];

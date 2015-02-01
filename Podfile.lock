@@ -34,7 +34,6 @@ PODS:
     - SimpleAuth/UI
   - SimpleAuth/UI (0.3.6):
     - SimpleAuth/Core
-  - Surfboard (1.0.0)
   - UAAppReviewManager (0.2.6)
   - Vertigo (0.1)
 
@@ -49,7 +48,6 @@ DEPENDENCIES:
   - SimpleAuth/FacebookWeb
   - SimpleAuth/LinkedInWeb
   - SimpleAuth/TwitterWeb
-  - Surfboard
   - UAAppReviewManager (~> 0.2.6)
   - Vertigo
 
@@ -67,7 +65,6 @@ SPEC CHECKSUMS:
   RESideMenu: a9c1cd2e64e60e1d3166ddac01a83e215a0e4d30
   SAMCache: ab96161f1938a85b0fd426958fc7f36e29a9fe27
   SimpleAuth: 0664e22bff27c7f5b169254b421b1c761d002f65
-  Surfboard: 262e865041f687ac38ea48582667b27615d86aa5
   UAAppReviewManager: f23428de9c9cd242c2ffd899e218ba3620bd0683
   Vertigo: 606222b572b2f54d5a85329b7afe1436a4859e89
 

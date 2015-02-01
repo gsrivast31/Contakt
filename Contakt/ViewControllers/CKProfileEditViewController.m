@@ -152,7 +152,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 
 - (void)setProfileImage:(UIImage*)image {
     imageView.contentMode = UIViewContentModeCenter;
-    if (CGRectContainsRect(imageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
+    if (!CGRectContainsRect(imageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
         imageView.contentMode = UIViewContentModeScaleToFill;
     }
     imageView.image = image;

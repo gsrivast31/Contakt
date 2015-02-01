@@ -22,7 +22,7 @@
 
 - (void)setProfileImage:(UIImage*)image {
     self.profileImageView.contentMode = UIViewContentModeCenter;
-    if (CGRectContainsRect(self.profileImageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
+    if (!CGRectContainsRect(self.profileImageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
         self.profileImageView.contentMode = UIViewContentModeScaleToFill;
     }
     self.profileImageView.image = image;

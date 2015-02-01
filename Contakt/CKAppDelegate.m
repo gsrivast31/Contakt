@@ -14,6 +14,8 @@
 #import "CKTwitterSource.h"
 #import "CKLinkedInSource.h"
 
+#import "CKIntroViewController.h"
+
 #import <UAAppReviewManager/UAAppReviewManager.h>
 #import <Parse/Parse.h>
 
@@ -42,7 +44,8 @@
     if ([CKHelper isStringValid:currentProfile]) {
         [self.window setRootViewController:[self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"rootController"]];
     } else {
-        [self.window setRootViewController:[self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"introSignupController"]];
+//        [self.window setRootViewController:[self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"introSignupController"]];
+        [self.window setRootViewController:[[CKIntroViewController alloc] init]];
     }
     
     // Let UAAppReviewManager know our application has launched

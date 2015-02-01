@@ -17,7 +17,6 @@ pod 'SimpleAuth/TwitterWeb'
 pod 'MGSwipeTableCell'
 pod 'SAMCache'
 pod 'MBProgressHUD', '~> 0.8'
-pod 'Surfboard'
 
 end
 

@@ -85,6 +85,13 @@
 		F4496DEF1A6E86B400944E67 /* CKProfileViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4496DEE1A6E86B400944E67 /* CKProfileViewCell.m */; };
 		F4496DF21A6E883E00944E67 /* CKConnectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4496DF11A6E883E00944E67 /* CKConnectionViewCell.m */; };
 		F44CDB321A70224100A9F50F /* CKFacebookSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CDB311A70224000A9F50F /* CKFacebookSource.m */; };
+		F4B093B41A7EBC89002B1A5F /* CKIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B093B31A7EBC89002B1A5F /* CKIntroViewController.m */; };
+		F4B093B81A7EBE10002B1A5F /* intros.json in Resources */ = {isa = PBXBuildFile; fileRef = F4B093B71A7EBE10002B1A5F /* intros.json */; };
+		F4B093CB1A7EC49A002B1A5F /* UIButton+IndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B093BD1A7EC49A002B1A5F /* UIButton+IndexPath.m */; };
+		F4B093CC1A7EC49A002B1A5F /* SRFSurfboardPanelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B093C01A7EC49A002B1A5F /* SRFSurfboardPanelCell.m */; };
+		F4B093CD1A7EC49A002B1A5F /* SRFSurfboardPanelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B093C11A7EC49A002B1A5F /* SRFSurfboardPanelCell.xib */; };
+		F4B093CE1A7EC49A002B1A5F /* SRFSurfboardPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B093C41A7EC49A002B1A5F /* SRFSurfboardPanel.m */; };
+		F4B093CF1A7EC49A002B1A5F /* SRFSurfboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B093CA1A7EC49A002B1A5F /* SRFSurfboardViewController.m */; };
 		F4F413971A779D4600CBAC7C /* CKIntroSignupViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F413961A779D4600CBAC7C /* CKIntroSignupViewController1.m */; };
 		F4F4139A1A779D6300CBAC7C /* CKIntroSignupViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F413991A779D6300CBAC7C /* CKIntroSignupViewController2.m */; };
 		F4F4139D1A77AC0600CBAC7C /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F4139B1A77AC0500CBAC7C /* Bolts.framework */; };
@@ -279,6 +286,20 @@
 		F44CDB301A70224000A9F50F /* CKFacebookSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFacebookSource.h; path = Controllers/Sources/CKFacebookSource.h; sourceTree = "<group>"; };
 		F44CDB311A70224000A9F50F /* CKFacebookSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFacebookSource.m; path = Controllers/Sources/CKFacebookSource.m; sourceTree = "<group>"; };
 		F48F70141A7BBD6000AA44F3 /* CKCredentials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CKCredentials.h; path = Utilities/CKCredentials.h; sourceTree = "<group>"; };
+		F4B093B21A7EBC89002B1A5F /* CKIntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKIntroViewController.h; path = ViewControllers/CKIntroViewController.h; sourceTree = "<group>"; };
+		F4B093B31A7EBC89002B1A5F /* CKIntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKIntroViewController.m; path = ViewControllers/CKIntroViewController.m; sourceTree = "<group>"; };
+		F4B093B71A7EBE10002B1A5F /* intros.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = intros.json; sourceTree = "<group>"; };
+		F4B093BC1A7EC49A002B1A5F /* UIButton+IndexPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+IndexPath.h"; sourceTree = "<group>"; };
+		F4B093BD1A7EC49A002B1A5F /* UIButton+IndexPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+IndexPath.m"; sourceTree = "<group>"; };
+		F4B093BF1A7EC49A002B1A5F /* SRFSurfboardPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRFSurfboardPanelCell.h; sourceTree = "<group>"; };
+		F4B093C01A7EC49A002B1A5F /* SRFSurfboardPanelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRFSurfboardPanelCell.m; sourceTree = "<group>"; };
+		F4B093C11A7EC49A002B1A5F /* SRFSurfboardPanelCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRFSurfboardPanelCell.xib; sourceTree = "<group>"; };
+		F4B093C31A7EC49A002B1A5F /* SRFSurfboardPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRFSurfboardPanel.h; sourceTree = "<group>"; };
+		F4B093C41A7EC49A002B1A5F /* SRFSurfboardPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRFSurfboardPanel.m; sourceTree = "<group>"; };
+		F4B093C51A7EC49A002B1A5F /* SRFSurfboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRFSurfboard.h; sourceTree = "<group>"; };
+		F4B093C71A7EC49A002B1A5F /* SRFSurfboardDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRFSurfboardDelegate.h; sourceTree = "<group>"; };
+		F4B093C91A7EC49A002B1A5F /* SRFSurfboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRFSurfboardViewController.h; sourceTree = "<group>"; };
+		F4B093CA1A7EC49A002B1A5F /* SRFSurfboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRFSurfboardViewController.m; sourceTree = "<group>"; };
 		F4F413951A779D4600CBAC7C /* CKIntroSignupViewController1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKIntroSignupViewController1.h; path = ViewControllers/CKIntroSignupViewController1.h; sourceTree = "<group>"; };
 		F4F413961A779D4600CBAC7C /* CKIntroSignupViewController1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKIntroSignupViewController1.m; path = ViewControllers/CKIntroSignupViewController1.m; sourceTree = "<group>"; };
 		F4F413981A779D6300CBAC7C /* CKIntroSignupViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKIntroSignupViewController2.h; path = ViewControllers/CKIntroSignupViewController2.h; sourceTree = "<group>"; };
@@ -546,6 +567,7 @@
 		F427D5E11A6AE8F400A843C1 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				F4B093B91A7EC49A002B1A5F /* SRFSurfboard */,
 				F429625F1A7B5B3A00C6B6D5 /* SVWebViewController */,
 				F4496DE61A6E5EA900944E67 /* TumblrMenu */,
 				F427D5E21A6AE93100A843C1 /* FlatUIKit */,
@@ -736,13 +758,82 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		F4B093B91A7EC49A002B1A5F /* SRFSurfboard */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093BA1A7EC49A002B1A5F /* Panel Cells */,
+				F4B093C21A7EC49A002B1A5F /* Panel Data Model */,
+				F4B093C51A7EC49A002B1A5F /* SRFSurfboard.h */,
+				F4B093C61A7EC49A002B1A5F /* Surfboard Delegate Protocol */,
+				F4B093C81A7EC49A002B1A5F /* Surfboard View Controller */,
+			);
+			path = SRFSurfboard;
+			sourceTree = "<group>";
+		};
+		F4B093BA1A7EC49A002B1A5F /* Panel Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093BB1A7EC49A002B1A5F /* Button Extension */,
+				F4B093BE1A7EC49A002B1A5F /* Default Cell */,
+			);
+			path = "Panel Cells";
+			sourceTree = "<group>";
+		};
+		F4B093BB1A7EC49A002B1A5F /* Button Extension */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093BC1A7EC49A002B1A5F /* UIButton+IndexPath.h */,
+				F4B093BD1A7EC49A002B1A5F /* UIButton+IndexPath.m */,
+			);
+			path = "Button Extension";
+			sourceTree = "<group>";
+		};
+		F4B093BE1A7EC49A002B1A5F /* Default Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093BF1A7EC49A002B1A5F /* SRFSurfboardPanelCell.h */,
+				F4B093C01A7EC49A002B1A5F /* SRFSurfboardPanelCell.m */,
+				F4B093C11A7EC49A002B1A5F /* SRFSurfboardPanelCell.xib */,
+			);
+			path = "Default Cell";
+			sourceTree = "<group>";
+		};
+		F4B093C21A7EC49A002B1A5F /* Panel Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093C31A7EC49A002B1A5F /* SRFSurfboardPanel.h */,
+				F4B093C41A7EC49A002B1A5F /* SRFSurfboardPanel.m */,
+			);
+			path = "Panel Data Model";
+			sourceTree = "<group>";
+		};
+		F4B093C61A7EC49A002B1A5F /* Surfboard Delegate Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093C71A7EC49A002B1A5F /* SRFSurfboardDelegate.h */,
+			);
+			path = "Surfboard Delegate Protocol";
+			sourceTree = "<group>";
+		};
+		F4B093C81A7EC49A002B1A5F /* Surfboard View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F4B093C91A7EC49A002B1A5F /* SRFSurfboardViewController.h */,
+				F4B093CA1A7EC49A002B1A5F /* SRFSurfboardViewController.m */,
+			);
+			path = "Surfboard View Controller";
+			sourceTree = "<group>";
+		};
 		F4F413941A779D0300CBAC7C /* Intro */ = {
 			isa = PBXGroup;
 			children = (
+				F4B093B71A7EBE10002B1A5F /* intros.json */,
 				F4F413951A779D4600CBAC7C /* CKIntroSignupViewController1.h */,
 				F4F413961A779D4600CBAC7C /* CKIntroSignupViewController1.m */,
 				F4F413981A779D6300CBAC7C /* CKIntroSignupViewController2.h */,
 				F4F413991A779D6300CBAC7C /* CKIntroSignupViewController2.m */,
+				F4B093B21A7EBC89002B1A5F /* CKIntroViewController.h */,
+				F4B093B31A7EBC89002B1A5F /* CKIntroViewController.m */,
 			);
 			name = Intro;
 			sourceTree = "<group>";
@@ -850,7 +941,9 @@
 				F42962831A7B5B3A00C6B6D5 /* SVWebViewControllerActivityChrome-iPad.png in Resources */,
 				F427D6901A6AE93200A843C1 /* Lato-Italic.ttf in Resources */,
 				F42962811A7B5B3A00C6B6D5 /* SVWebViewController.bundle in Resources */,
+				F4B093CD1A7EC49A002B1A5F /* SRFSurfboardPanelCell.xib in Resources */,
 				F42962871A7B5B3A00C6B6D5 /* SVWebViewControllerActivitySafari-iPad.png in Resources */,
+				F4B093B81A7EBE10002B1A5F /* intros.json in Resources */,
 				F42962841A7B5B3A00C6B6D5 /* SVWebViewControllerActivityChrome-iPad@2x.png in Resources */,
 				F427D6921A6AE93200A843C1 /* Lato-Regular.ttf in Resources */,
 				F429628A1A7B5B3A00C6B6D5 /* SVWebViewControllerActivitySafari@2x.png in Resources */,
@@ -912,6 +1005,7 @@
 				F427D65C1A6AE93200A843C1 /* FUIAlertView.m in Sources */,
 				F427D6671A6AE93200A843C1 /* UIImage+FlatUI.m in Sources */,
 				F427D65F1A6AE93200A843C1 /* FUIPopoverBackgroundView.m in Sources */,
+				F4B093CF1A7EC49A002B1A5F /* SRFSurfboardViewController.m in Sources */,
 				F4F4139A1A779D6300CBAC7C /* CKIntroSignupViewController2.m in Sources */,
 				F427D5911A6A2DFA00A843C1 /* CKAppDelegate.m in Sources */,
 				F4496DF21A6E883E00944E67 /* CKConnectionViewCell.m in Sources */,
@@ -939,6 +1033,7 @@
 				F427D5C51A6A486100A843C1 /* CKCoreDataStack.m in Sources */,
 				F427D6BC1A6BAECF00A843C1 /* CKTwitterSource.m in Sources */,
 				F427D7281A6D465200A843C1 /* CKRootViewController.m in Sources */,
+				F4B093CC1A7EC49A002B1A5F /* SRFSurfboardPanelCell.m in Sources */,
 				F427D65E1A6AE93200A843C1 /* FUICellBackgroundView.m in Sources */,
 				F427D5D81A6AA10D00A843C1 /* CKQRCodeReaderViewController.m in Sources */,
 				F427D6621A6AE93200A843C1 /* FUITextField.m in Sources */,
@@ -953,6 +1048,7 @@
 				F427D6C21A6BAEFB00A843C1 /* CKLinkedInSource.m in Sources */,
 				F427D7241A6D45FB00A843C1 /* CKSideMenuViewController.m in Sources */,
 				F427D6661A6AE93200A843C1 /* UIFont+FlatUI.m in Sources */,
+				F4B093CE1A7EC49A002B1A5F /* SRFSurfboardPanel.m in Sources */,
 				F427D5941A6A2DFA00A843C1 /* Contakt.xcdatamodeld in Sources */,
 				F427D6B31A6BAE8D00A843C1 /* CKSourceController.m in Sources */,
 				F427D5B61A6A42A900A843C1 /* CKContactCollectionViewController.m in Sources */,
@@ -964,6 +1060,8 @@
 				F42962891A7B5B3A00C6B6D5 /* SVWebViewControllerActivitySafari.m in Sources */,
 				F427D5D01A6A6B3400A843C1 /* CKCodeGenerator.m in Sources */,
 				F427D6AC1A6B07F700A843C1 /* CKProfileConnectionTableViewCell.m in Sources */,
+				F4B093CB1A7EC49A002B1A5F /* UIButton+IndexPath.m in Sources */,
+				F4B093B41A7EBC89002B1A5F /* CKIntroViewController.m in Sources */,
 				F42962851A7B5B3A00C6B6D5 /* SVWebViewControllerActivityChrome.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

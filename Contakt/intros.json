@@ -1,0 +1,15 @@
+ [
+  {
+  "text" : "Welcome to ContaktMe.",
+  "image" : "facebook_circle",
+  },
+  {
+  "text" : "Surfboard makes it delightfully easy to craft onboarding experiences.",
+  "image" : "linkedin_circle",
+  },
+  {
+  "text" : "If you like Surfboard give me a shoutout on Twitter.\nI'm @bermaniastudios.",
+  "image" : "twitter_circle",
+  "button" : "Create my contakt card"
+  }
+  ]
