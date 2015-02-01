@@ -15,6 +15,7 @@
 #import "CKCommon.h"
 #import "CKHelper.h"
 #import "CKCredentials.h"
+#import "FlatUIKit.h"
 #endif
 
 #endif

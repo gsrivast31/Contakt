@@ -6,9 +6,6 @@
 //  Copyright (c) 2015 GAURAV SRIVASTAVA. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "FlatUIKit.h"
-
 @interface CKProfileTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet FUITextField *valueTextField;

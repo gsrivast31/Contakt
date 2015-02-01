@@ -13,6 +13,7 @@
 
 #import <MessageUI/MessageUI.h>
 #import <UAAppReviewManager/UAAppReviewManager.h>
+#import "NSString+Icons.h"
 
 @interface CKSideMenuViewController () <MFMailComposeViewControllerDelegate>
 
@@ -134,16 +135,16 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.backgroundColor = [UIColor clearColor];
-        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:21];
-        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.font = [UIFont iconFontWithSize:18.0f];
+        cell.textLabel.textColor = [UIColor turquoiseColor];
+        cell.textLabel.alpha = 0.7f;
         cell.textLabel.highlightedTextColor = [UIColor lightGrayColor];
         cell.selectedBackgroundView = [[UIView alloc] init];
     }
     
     NSArray *titles = @[@"Friends", @"Profile", @"Give Feedback", @"Tell a Friend", @"Rate Us"];
-    NSArray *images = @[@"IconHome", @"IconProfile", @"IconSettings", @"IconSettings", @"IconSettings"];
-    cell.textLabel.text = titles[indexPath.row];
-    cell.imageView.image = [UIImage imageNamed:images[indexPath.row]];
+    NSArray *images = @[[NSString iconStringForEnum:FUIHome], [NSString iconStringForEnum:FUIUser], [NSString iconStringForEnum:FUIMail], [NSString iconStringForEnum:FUIChat], [NSString iconStringForEnum:FUIStar2]];
+    cell.textLabel.text = [images[indexPath.row] stringByAppendingFormat:@" %@", titles[indexPath.row]];
     
     return cell;
 }

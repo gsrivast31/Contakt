@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 GAURAV SRIVASTAVA. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "CKButton.h"
 
 @class CKContact;

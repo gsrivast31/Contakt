@@ -9,7 +9,6 @@
 #import "CKQRCodeReaderViewController.h"
 #import "CKCoreDataStack.h"
 #import "CKContact.h"
-#import "FlatUIKit.h"
 #import <AVFoundation/AVFoundation.h>
 
 
@@ -38,6 +37,9 @@
     
     self.videoButton.titleLabel.font = [UIFont flatFontOfSize:16];
     [self.videoButton setTitle:@"Stop" forState:UIControlStateNormal];
+    [self.videoButton setBackgroundColor:[UIColor whiteColor]];
+    [self.videoButton setAlpha:0.6f];
+    [self.videoButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     self.videoButton.userInteractionEnabled = YES;
     
     UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(stopCamera)];

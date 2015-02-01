@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 GAURAV SRIVASTAVA. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @class CKSourceBase;
 
 @protocol CKSourceLoginDelegate<NSObject>

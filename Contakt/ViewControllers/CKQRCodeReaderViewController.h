@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 GAURAV SRIVASTAVA. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @protocol CKQRCodeReaderDelegate<NSObject>
 
 - (void)didReadQRCode:(NSString*)string;

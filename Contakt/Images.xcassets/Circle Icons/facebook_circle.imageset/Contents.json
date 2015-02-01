@@ -3,11 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "facebook.png"
+      "filename" : "facebook_circle.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "facebook_circle@2x.png"
     },
     {
       "idiom" : "universal",

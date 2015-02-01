@@ -11,7 +11,6 @@
 
 #import "CKConnection.h"
 #import "CKContact.h"
-#import "FlatUIKit.h"
 #import "NSString+Icons.h"
 #import "CKCodeGenerator.h"
 
@@ -72,7 +71,7 @@
     self.qrImageView.clipsToBounds = YES;
     self.qrImageView.userInteractionEnabled = YES;
 
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
 }
 
 @end

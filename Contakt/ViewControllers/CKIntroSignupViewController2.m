@@ -19,7 +19,7 @@
 
 #import "CKSourceController.h"
 
-#import "FlatUIKit.h"
+#import "CAGradientLayer+CKGradients.h"
 
 @interface CKIntroSignupViewController2 () <CKSourceLoginDelegate>
 {
@@ -57,8 +57,8 @@
     
     connectEmail = connectPhone = connectFB = connectLinkedIn = connectTwitter = FALSE;
     
-    self.optionLabel.text = @"Select networks to share";
-    self.optionLabel.font = [UIFont italicFlatFontOfSize:16.0f];
+    self.optionLabel.text = @"SELECT NETWORKS TO SHARE";
+    self.optionLabel.font = [UIFont flatFontOfSize:21.0f];
     self.optionLabel.textColor = [UIColor midnightBlueColor];
     
     self.submitButton.buttonColor = [UIColor turquoiseColor];
@@ -83,6 +83,10 @@
     [self addBorder:self.fbButton];
     [self addBorder:self.twitterButton];
     [self addBorder:self.linkedinButton];
+    
+    CAGradientLayer *backgroundLayer = [CAGradientLayer sideGradientLayer];
+    backgroundLayer.frame = self.view.frame;
+    [self.view.layer insertSublayer:backgroundLayer atIndex:0];
 }
 
 - (void)didReceiveMemoryWarning {

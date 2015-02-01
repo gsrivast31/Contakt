@@ -9,7 +9,6 @@
 #import "CKConnectionViewCell.h"
 #import "CKMediaController.h"
 #import "NSString+Icons.h"
-#import "FlatUIKit.h"
 #import "CKContact.h"
 #import "CKConnection.h"
 
@@ -142,7 +141,7 @@
         self.linkedinButton.enabled = NO;
     }
 
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
 }
 
 @end

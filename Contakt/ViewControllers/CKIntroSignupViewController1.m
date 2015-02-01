@@ -8,15 +8,17 @@
 
 #import "CKIntroSignupViewController1.h"
 #import "CKIntroSignupViewController2.h"
-#import "FlatUIKit.h"
 #import "NSString+Icons.h"
+#import "CKTextField.h"
+#import "CAGradientLayer+CKGradients.h"
 
-@interface CKIntroSignupViewController1 () <UITextFieldDelegate>
+@interface CKIntroSignupViewController1 ()
 
-@property (weak, nonatomic) IBOutlet FUITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet FUITextField *emailTextField;
-@property (weak, nonatomic) IBOutlet FUITextField *phoneTextField;
+@property (weak, nonatomic) IBOutlet CKTextField *nameTextField;
+@property (weak, nonatomic) IBOutlet CKTextField *emailTextField;
+@property (weak, nonatomic) IBOutlet CKTextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet FUIButton *continueButton;
+@property (weak, nonatomic) IBOutlet UILabel *captionLabel;
 
 @end
 
@@ -25,14 +27,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])
+        [self setEdgesForExtendedLayout:UIRectEdgeTop];
+    
     self.nameTextField.placeholder = @"Name";
-    self.nameTextField.delegate = self;
     
     self.emailTextField.placeholder = @"Email";
-    self.emailTextField.delegate = self;
     
     self.phoneTextField.placeholder = @"(+1)-2223334444";
-    self.phoneTextField.delegate = self;
+    
+    [self.nameTextField setRequired:YES];
+    [self.emailTextField setRequired:YES];
+    [self.phoneTextField setRequired:NO];
     
     [self setupStyling:self.nameTextField];
     [self setupStyling:self.emailTextField];
@@ -46,14 +52,20 @@
     [self.continueButton setTitleColor:[UIColor cloudsColor] forState:UIControlStateNormal];
     [self.continueButton setTitleColor:[UIColor cloudsColor] forState:UIControlStateHighlighted];
     
+    self.captionLabel.text = @"FILL YOUR DETAILS";
+    self.captionLabel.font = [UIFont flatFontOfSize:21.0f];
+    self.captionLabel.textColor = [UIColor midnightBlueColor];
+    
     [self.continueButton setTitle:[NSString stringWithFormat:@"CONTINUE %@", [NSString iconStringForEnum:FUIArrowRight]] forState:UIControlStateNormal];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableDisableButton) name:UITextFieldTextDidChangeNotification object:self.nameTextField];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableDisableButton) name:UITextFieldTextDidChangeNotification object:self.emailTextField];
     
     [self enableDisableButton];
-    self.navigationController.navigationBar.translucent = YES;
-
+    
+    CAGradientLayer *backgroundLayer = [CAGradientLayer sideGradientLayer];
+    backgroundLayer.frame = self.view.frame;
+    [self.view.layer insertSublayer:backgroundLayer atIndex:0];
 }
 
 - (void)dealloc {
@@ -69,6 +81,15 @@
     [textField setTextColor:[UIColor midnightBlueColor]];
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if (![self validateInputInView:self.view]) {
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Invalid information please review and try again!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alertView show];
+        return NO;
+    }
+    return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     CKIntroSignupViewController2* vc = (CKIntroSignupViewController2*)segue.destinationViewController;
     [vc setUserWithName:self.nameTextField.text withEmail:self.emailTextField.text withPhone:self.phoneTextField.text];
@@ -82,10 +103,18 @@
     }
 }
 
-#pragma mark UITextFieldDelegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
+- (BOOL)validateInputInView:(UIView*)view {
+    for(UIView *subView in view.subviews){
+        if ([subView isKindOfClass:[UIScrollView class]])
+            return [self validateInputInView:subView];
+        
+        if ([subView isKindOfClass:[CKTextField class]]){
+            if (![(CKTextField*)subView validate]){
+                return NO;
+            }
+        }
+    }
+    
     return YES;
 }
 

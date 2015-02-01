@@ -15,7 +15,6 @@
 #import "CKMediaController.h"
 #import "CKContact.h"
 #import "CKConnection.h"
-#import "FlatUIKit.h"
 #import "TGRImageViewController.h"
 #import "TGRImageZoomAnimationController.h"
 #import "SVWebViewController.h"
@@ -103,9 +102,9 @@ static NSString * const reuseIdentifier2 = @"connectionViewCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 200.0f;
+        return 160.0f;
     } else {
-        return 280.0f;
+        return 370.0f;
     }
 }
 

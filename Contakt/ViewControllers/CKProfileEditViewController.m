@@ -11,7 +11,6 @@
 #import "CKProfileConnectionTableViewCell.h"
 #import "CKSourceController.h"
 
-#import "FlatUIKit.h"
 #import "NSString+Icons.h"
 #import "CKSourceBase.h"
 
@@ -160,14 +159,14 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 - (void)changeUser:(UIGestureRecognizer*)gesture {
     CHTumblrMenuView *menuView = [[CHTumblrMenuView alloc] init];
     
-    [menuView addMenuItemWithTitle:@"Gallery" andIcon:[UIImage imageNamed:@"camera"] andSelectedBlock:^{
+    [menuView addMenuItemWithTitle:@"Gallery" andIcon:[UIImage imageNamed:@"gallery_circle"] andSelectedBlock:^{
         UIImagePickerController *controller = [[UIImagePickerController alloc] init];
         controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         controller.delegate = self;
         [self presentViewController:controller animated:YES completion:nil];
     }];
     
-    [menuView addMenuItemWithTitle:@"Camera" andIcon:[UIImage imageNamed:@"camera"] andSelectedBlock:^{
+    [menuView addMenuItemWithTitle:@"Camera" andIcon:[UIImage imageNamed:@"camera_circle"] andSelectedBlock:^{
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             UIImagePickerController *controller = [[UIImagePickerController alloc] init];
             controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -176,7 +175,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
         }
     }];
     
-    [menuView addMenuItemWithTitle:@"Facebook" andIcon:[UIImage imageNamed:@"facebook"] andSelectedBlock:^{
+    [menuView addMenuItemWithTitle:@"Facebook" andIcon:[UIImage imageNamed:@"facebook_circle"] andSelectedBlock:^{
         NSString* imageUrl = facebookDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageFacebook], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
@@ -190,7 +189,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
             }];
         }
     }];
-    [menuView addMenuItemWithTitle:@"Twitter" andIcon:[UIImage imageNamed:@"twitter"] andSelectedBlock:^{
+    [menuView addMenuItemWithTitle:@"Twitter" andIcon:[UIImage imageNamed:@"twitter_circle"] andSelectedBlock:^{
         NSString* imageUrl = twitterDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageTwitter], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
@@ -204,7 +203,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
             }];
         }
     }];
-    [menuView addMenuItemWithTitle:@"LinkedIn" andIcon:[UIImage imageNamed:@"linkedin"] andSelectedBlock:^{
+    [menuView addMenuItemWithTitle:@"LinkedIn" andIcon:[UIImage imageNamed:@"linkedin_circle"] andSelectedBlock:^{
         NSString* imageUrl = linkedinDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageLinkedIn], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
@@ -434,6 +433,10 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 }
 
 #pragma mark UITableViewDelegate
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section {
     if (section == 0) {
         return 6.0f;

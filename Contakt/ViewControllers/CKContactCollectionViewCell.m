@@ -9,8 +9,6 @@
 #import "CKContactCollectionViewCell.h"
 #import "CKMediaController.h"
 
-#import "FlatUIKit.h"
-
 #define kBorderWidth 2.0
 
 @interface CKContactCollectionViewCell()

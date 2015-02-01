@@ -14,17 +14,19 @@
 #import "CKConnectionView.h"
 #import "CKCoreDataStack.h"
 #import "CKAppDelegate.h"
-#import "FlatUIKit.h"
 #import "CKConnection.h"
 #import <MessageUI/MessageUI.h>
 #import "SVWebViewController.h"
 
-@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate>
+@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
+{
+    UISearchController* searchController;
+    UIView* searchView;
+    
+    NSArray *searchResults;
+}
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
-@property(nonatomic,strong) UISearchBar *searchBar;
-@property(nonatomic) BOOL searchBarActive;
-@property(nonatomic) float searchBarBoundsY;
 
 @end
 
@@ -47,8 +49,8 @@ static NSString * const reuseIdentifier = @"contactCell";
     self.layout.lineSpacing = 10;
 
     [self prepareSearchBar];
-    self.collectionView.contentInset = UIEdgeInsetsMake(self.searchBar.frame.size.height, 5, 0, 5);
-    self.collectionView.contentOffset = CGPointMake(0, -self.searchBar.frame.size.height);
+    self.collectionView.contentInset = UIEdgeInsetsMake(searchController.searchBar.frame.size.height, 5, 0, 5);
+    self.collectionView.contentOffset = CGPointMake(0, -searchController.searchBar.frame.size.height);
 
     [self.fetchedResultsController performFetch:nil];
     
@@ -63,20 +65,70 @@ static NSString * const reuseIdentifier = @"contactCell";
 }
 
 - (void)prepareSearchBar{
-    if (!self.searchBar) {
-        self.searchBarBoundsY = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
-        self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, self.searchBarBoundsY, [UIScreen mainScreen].bounds.size.width, 44)];
-        self.searchBar.searchBarStyle       = UISearchBarStyleMinimal;
-        self.searchBar.showsCancelButton    = YES;
-        self.searchBar.tintColor            = [UIColor whiteColor];
-        self.searchBar.barTintColor         = [UIColor whiteColor];
-        self.searchBar.delegate             = self;
-        self.searchBar.placeholder          = @"search here";
-        
-        [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor whiteColor]];
-        
-        [self.view addSubview:self.searchBar];
+    if (!searchView) {
+        CGFloat searchBarBoundsY = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+        searchView = [[UIView alloc] initWithFrame:CGRectMake(0, searchBarBoundsY, [UIScreen mainScreen].bounds.size.width, 44)];
+        searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+        searchController.searchResultsUpdater = self;
+        [searchController.searchBar sizeToFit];
+        [searchView addSubview:searchController.searchBar];
+        searchController.dimsBackgroundDuringPresentation = NO;
+        searchController.delegate = self;
+        searchController.searchBar.delegate = self;
+        self.definesPresentationContext = YES;
+
+        [self.view addSubview:searchView];
     }
+    
+    searchController.searchBar.tintColor = [UIColor colorFromHexCode:@"282F3B"];
+    searchController.searchBar.barTintColor = [UIColor colorFromHexCode:@"282F3B"];
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setBackgroundColor:[UIColor colorFromHexCode:@"343C4A"]];
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor turquoiseColor]];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitleTextAttributes:[NSDictionary
+                                                                                                  dictionaryWithObjectsAndKeys:
+                                                                                                  [UIColor turquoiseColor],
+                                                                                                  NSForegroundColorAttributeName,
+                                                                                                  nil]
+                                                                                        forState:UIControlStateNormal];
+
+}
+
+- (void)performSearchWithText:(NSString *)searchText {
+    NSString *regex = [NSString stringWithFormat:@".*?%@.*?", [searchText lowercaseString]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.name MATCHES[cd] %@", regex];
+    
+    if(predicate) {
+        NSMutableArray *newResults = [NSMutableArray array];
+        if(self.fetchedResultsController && [[self.fetchedResultsController fetchedObjects] count]) {
+            for(id<NSFetchedResultsSectionInfo> section in [self.fetchedResultsController sections]) {
+                NSArray *matchingObjects = [[section objects] filteredArrayUsingPredicate:predicate];
+                if(matchingObjects && [matchingObjects count]) {
+                    [newResults addObject:matchingObjects];
+                }
+            }
+            
+            searchResults = newResults;
+            return;
+        }
+    }
+    
+    searchResults = nil;
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+    [searchController setActive:NO];
+}
+
+#pragma mark - UISearchControllerDelegate
+
+#pragma mark - UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchViewController {
+    [self performSearchWithText:searchViewController.searchBar.text];
+    [self.collectionView reloadData];
 }
 
 #pragma mark CKQRCodeReaderDelegate
@@ -99,20 +151,34 @@ static NSString * const reuseIdentifier = @"contactCell";
 #pragma mark UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    if(searchController.isActive == NO) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+        return [sectionInfo numberOfObjects];
+    } else {
+        return [[searchResults objectAtIndex:section] count];
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CKContactCollectionViewCell *cell = (CKContactCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    CKContact *contact = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    CKContact* contact = nil;
+    if (searchController.isActive == NO) {
+        contact = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    } else {
+        NSArray *section = [searchResults objectAtIndex:indexPath.section];
+        contact = (CKContact *)[section objectAtIndex:indexPath.row];
+    }
 
     [cell configureCellForContact:contact];
     return cell;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return [[self.fetchedResultsController sections] count];
+    if(searchController.isActive == NO) {
+        return [[self.fetchedResultsController sections] count];
+    } else {
+        return [searchResults count];
+    }
 }
 
 #pragma mark UICollectionViewDelegate
@@ -120,10 +186,6 @@ static NSString * const reuseIdentifier = @"contactCell";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     CKContact *contact = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [CKConnectionView presentInView:self.view withContact:contact withDelegate:self];
-}
-
-- (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    return nil;
 }
 
 #pragma mark NSFetchedResultsControllerDelegate
@@ -291,35 +353,7 @@ static NSString * const reuseIdentifier = @"contactCell";
     return shouldReload;
 }
 
-#pragma mark - search
-
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    self.searchBarActive = NO;
-    searchBar.text       = @"";
-    [searchBar resignFirstResponder];
-    [self.collectionView reloadData];
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    self.searchBarActive = YES;
-    [self.view endEditing:YES];
-}
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    self.searchBarActive = YES;
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
-    self.searchBarActive = NO;
-}
-
-#pragma mark - observer
+/*#pragma mark - observer
 - (void)addObservers{
     [self.collectionView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 }
@@ -334,7 +368,7 @@ static NSString * const reuseIdentifier = @"contactCell";
                                           self.searchBar.frame.size.width,
                                           self.searchBar.frame.size.height);
     }
-}
+}*/
 
 #pragma mark CKConnectionViewDelegate
 

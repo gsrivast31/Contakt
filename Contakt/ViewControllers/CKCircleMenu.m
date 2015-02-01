@@ -8,7 +8,6 @@
 
 #import "CKCircleMenu.h"
 #import "CKMediaController.h"
-#import "FlatUIKit.h"
 #import "CKContact.h"
 
 @interface CKCircleMenu()
@@ -112,11 +111,11 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 }
 
 - (void)addMenuOptions {
-    [self.menu addSubview:[self buttonWithTag:CKEmailType withImageName:@"email"]];
-    [self.menu addSubview:[self buttonWithTag:CKPhoneType withImageName:@"pinterest"]];
-    [self.menu addSubview:[self buttonWithTag:CKFacebookType withImageName:@"facebook"]];
-    [self.menu addSubview:[self buttonWithTag:CKTwitterType withImageName:@"twitter"]];
-    [self.menu addSubview:[self buttonWithTag:CKLinkedInType withImageName:@"linkedin"]];
+    [self.menu addSubview:[self buttonWithTag:CKEmailType withImageName:@"mail_circle"]];
+    [self.menu addSubview:[self buttonWithTag:CKPhoneType withImageName:@"phone_circle"]];
+    [self.menu addSubview:[self buttonWithTag:CKFacebookType withImageName:@"facebook_circle"]];
+    [self.menu addSubview:[self buttonWithTag:CKTwitterType withImageName:@"twitter_circle"]];
+    [self.menu addSubview:[self buttonWithTag:CKLinkedInType withImageName:@"linkedin_circle"]];
 }
 
 - (UIButton*)buttonWithTag:(NSInteger)tag withImageName:(NSString*)imageName {
