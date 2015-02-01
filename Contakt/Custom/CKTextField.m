@@ -322,8 +322,14 @@
     
     [self setBarButtonNeedsDisplayAtTag:textField.tag];
     
-    if ([self.superview isKindOfClass:[UIScrollView class]] && self.scrollView == nil){
-        self.scrollView = (UIScrollView*)self.superview;
+    UIView* superview = self.superview;
+    
+    while (superview) {
+        if ([superview isKindOfClass:[UIScrollView class]] && self.scrollView == nil){
+            self.scrollView = (UIScrollView*)superview;
+            break;
+        }
+        superview = superview.superview;
     }
     
     [self selectInputView:textField];

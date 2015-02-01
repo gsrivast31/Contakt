@@ -65,7 +65,7 @@
 - (void)setupStyling {
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorFromHexCode:@"F1F0F0"]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName:[UIFont flatFontOfSize:17.0f], NSForegroundColorAttributeName:[UIColor colorFromHexCode:@"282F3B"]}];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor turquoiseColor]];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], [UIToolbar class], nil] setTintColor:[UIColor turquoiseColor]];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
