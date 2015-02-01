@@ -39,7 +39,7 @@
                   clientKey:PARSE_CLIENT_KEY];
     
     NSString *currentProfile = [[NSUserDefaults standardUserDefaults] valueForKey:kCurrentProfileString];
-    if (/*[CKHelper isStringValid:currentProfile]*/FALSE) {
+    if ([CKHelper isStringValid:currentProfile]) {
         [self.window setRootViewController:[self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"rootController"]];
     } else {
         [self.window setRootViewController:[self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"introSignupController"]];
@@ -47,8 +47,9 @@
     
     // Let UAAppReviewManager know our application has launched
     [UAAppReviewManager showPromptIfNecessary];
+    
     [self setupStyling];
-
+    
     return YES;
 }
 
@@ -65,7 +66,7 @@
 - (void)setupStyling {
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorFromHexCode:@"F1F0F0"]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName:[UIFont flatFontOfSize:17.0f], NSForegroundColorAttributeName:[UIColor colorFromHexCode:@"282F3B"]}];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], [UIToolbar class], nil] setTintColor:[UIColor turquoiseColor]];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor turquoiseColor]];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

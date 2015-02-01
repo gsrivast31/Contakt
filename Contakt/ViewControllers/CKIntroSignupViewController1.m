@@ -38,7 +38,9 @@
     
     [self.nameTextField setRequired:YES];
     [self.emailTextField setRequired:YES];
+    [self.emailTextField setEmailField:YES];
     [self.phoneTextField setRequired:NO];
+    [self.phoneTextField setNumberField:YES];
     
     [self setupStyling:self.nameTextField];
     [self setupStyling:self.emailTextField];
@@ -104,18 +106,7 @@
 }
 
 - (BOOL)validateInputInView:(UIView*)view {
-    for(UIView *subView in view.subviews){
-        if ([subView isKindOfClass:[UIScrollView class]])
-            return [self validateInputInView:subView];
-        
-        if ([subView isKindOfClass:[CKTextField class]]){
-            if (![(CKTextField*)subView validate]){
-                return NO;
-            }
-        }
-    }
-    
-    return YES;
+    return self.emailTextField.validate && self.nameTextField.validate && self.phoneTextField.validate;
 }
 
 @end

@@ -32,8 +32,6 @@ NS_ENUM(int16_t, CKImageType)
     CKImageNone = 5
 };
 
-static NSString* const APP_ID = @"";
-
 static NSString* const kNameString = @"Name";
 static NSString* const kEmailString = @"Email";
 static NSString* const kPhoneString = @"Phone";

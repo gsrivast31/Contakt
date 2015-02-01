@@ -1,5 +1,4 @@
 PODS:
-  - CKCircleMenuView (0.1.5)
   - CMDQueryStringSerialization (0.3.2):
     - ISO8601
   - cocoa-oauth (0.0.1):
@@ -7,6 +6,7 @@ PODS:
   - FXBlurView (1.6.3)
   - ISO8601 (0.1.1)
   - KRLCollectionViewGridLayout (0.1.1)
+  - MBProgressHUD (0.9)
   - MGSwipeTableCell (1.3.5)
   - NSData+Base64 (1.0.0)
   - ReactiveCocoa (2.4.4):
@@ -22,16 +22,11 @@ PODS:
   - SimpleAuth/Core (0.3.6):
     - CMDQueryStringSerialization
     - ReactiveCocoa
-  - SimpleAuth/Facebook (0.3.6):
-    - SimpleAuth/Core
   - SimpleAuth/FacebookWeb (0.3.6):
     - SimpleAuth/Core
     - SimpleAuth/UI
   - SimpleAuth/LinkedInWeb (0.3.6):
     - SimpleAuth/Core
-    - SimpleAuth/UI
-  - SimpleAuth/Twitter (0.3.6):
-    - cocoa-oauth
     - SimpleAuth/UI
   - SimpleAuth/TwitterWeb (0.3.6):
     - cocoa-oauth
@@ -39,32 +34,32 @@ PODS:
     - SimpleAuth/UI
   - SimpleAuth/UI (0.3.6):
     - SimpleAuth/Core
+  - Surfboard (1.0.0)
   - UAAppReviewManager (0.2.6)
   - Vertigo (0.1)
 
 DEPENDENCIES:
-  - CKCircleMenuView
   - FXBlurView
   - KRLCollectionViewGridLayout
+  - MBProgressHUD (~> 0.8)
   - MGSwipeTableCell
   - REComposeViewController (~> 2.3.2)
   - RESideMenu (~> 4.0.7)
   - SAMCache
-  - SimpleAuth/Facebook
   - SimpleAuth/FacebookWeb
   - SimpleAuth/LinkedInWeb
-  - SimpleAuth/Twitter
   - SimpleAuth/TwitterWeb
+  - Surfboard
   - UAAppReviewManager (~> 0.2.6)
   - Vertigo
 
 SPEC CHECKSUMS:
-  CKCircleMenuView: 9c77ea31cbcaa03886660511585d766e65dd33e9
   CMDQueryStringSerialization: bc824b96c08a3277d00c71504e13c9fa18c6b451
   cocoa-oauth: 418c70e6ce4130fa7ebdf05232018c8f391030d8
   FXBlurView: abe1046285813c4f6e9008abbc324fc5ab32af90
   ISO8601: a6afce5fbe854024802367c814fac4aa8d3586f9
   KRLCollectionViewGridLayout: 6bb02f60f0be933ef213a51fe254863133731a66
+  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MGSwipeTableCell: fe0d8896b57db2498d81bccf18a8ff98c72539aa
   NSData+Base64: aae92a2e3f0bd88b29fe6093551ded3f5c062548
   ReactiveCocoa: 31119068e3dde866bd257cf74e1f06b4023bf387
@@ -72,6 +67,7 @@ SPEC CHECKSUMS:
   RESideMenu: a9c1cd2e64e60e1d3166ddac01a83e215a0e4d30
   SAMCache: ab96161f1938a85b0fd426958fc7f36e29a9fe27
   SimpleAuth: 0664e22bff27c7f5b169254b421b1c761d002f65
+  Surfboard: 262e865041f687ac38ea48582667b27615d86aa5
   UAAppReviewManager: f23428de9c9cd242c2ffd899e218ba3620bd0683
   Vertigo: 606222b572b2f54d5a85329b7afe1436a4859e89
 

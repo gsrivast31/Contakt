@@ -62,6 +62,8 @@
 }
 
 + (NSString*)encodeString:(NSString*)string {
+    if (![CKHelper isStringValid:string])
+        string = @"";
     NSString* encodedString = [string stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSData* encodedData = [encodedString dataUsingEncoding:NSUTF8StringEncoding];
     return [encodedData base64EncodedStringWithOptions:0];

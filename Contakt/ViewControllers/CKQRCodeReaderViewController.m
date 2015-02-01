@@ -42,8 +42,16 @@
     [self.videoButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     self.videoButton.userInteractionEnabled = YES;
     
+    self.videoButton.layer.cornerRadius = CGRectGetWidth(self.videoButton.frame) / 2.0f;
+    self.videoButton.layer.borderColor = [[UIColor grayColor] CGColor];
+    self.videoButton.layer.borderWidth = 2.0f;
+    self.videoButton.layer.masksToBounds = YES;
+    self.videoButton.clipsToBounds = YES;
+    
     UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(stopCamera)];
     [self.videoButton addGestureRecognizer:gesture];
+    
+    [self startReading];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,25 +99,32 @@
     _videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
     [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [_videoPreviewLayer setFrame:self.videoPreview.frame];
-    [self.videoPreview.layer addSublayer:_videoPreviewLayer];
+    [self.videoPreview.layer insertSublayer:_videoPreviewLayer atIndex:0];
     
     // Start video capture.
     [_captureSession startRunning];
+    
+    _isReading = YES;
     
     return YES;
 }
 
 -(void)stopReading{
+    _isReading = NO;
+    
     // Stop video capture and make the capture session object nil.
     [_captureSession stopRunning];
     _captureSession = nil;
     
     // Remove the video preview layer from the viewPreview view's layer.
     [_videoPreviewLayer removeFromSuperlayer];
+    [self stopCamera];
 }
 
 -(void)updateContact:(NSString*)value {
-    [self.delegate didReadQRCode:value];
+    if (_isReading && [CKHelper isStringValid:value]) {
+        [self.delegate didReadQRCode:value];
+    }
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate method implementation
@@ -131,8 +146,6 @@
                 [strongSelf updateContact:[metadataObj stringValue]];
                 [strongSelf stopReading];
             });
-            
-            _isReading = NO;
             
             // If the audio player is not nil, then play the sound effect.
             if (_audioPlayer) {

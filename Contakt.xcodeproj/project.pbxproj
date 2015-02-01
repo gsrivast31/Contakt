@@ -77,6 +77,7 @@
 		F429628B1A7B5B3A00C6B6D5 /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = F429627C1A7B5B3A00C6B6D5 /* SVWebViewControllerActivity.m */; };
 		F429628F1A7B5CC300C6B6D5 /* CKButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F429628E1A7B5CC300C6B6D5 /* CKButton.m */; };
 		F447CED41A7E07900016AD90 /* CKTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F447CED31A7E07900016AD90 /* CKTextField.m */; };
+		F447CED91A7E8CB80016AD90 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F447CED81A7E8CB80016AD90 /* Social.framework */; };
 		F4496DE21A6E49CD00944E67 /* CKConnectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = F4496DE11A6E49CD00944E67 /* CKConnectionView.m */; };
 		F4496DE51A6E4AE600944E67 /* CKCircleMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F4496DE41A6E4AE600944E67 /* CKCircleMenu.m */; };
 		F4496DE91A6E5EA900944E67 /* CHTumblrMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = F4496DE81A6E5EA900944E67 /* CHTumblrMenuView.m */; };
@@ -262,6 +263,7 @@
 		F429628E1A7B5CC300C6B6D5 /* CKButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKButton.m; path = Custom/CKButton.m; sourceTree = "<group>"; };
 		F447CED21A7E07900016AD90 /* CKTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKTextField.h; path = Custom/CKTextField.h; sourceTree = "<group>"; };
 		F447CED31A7E07900016AD90 /* CKTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKTextField.m; path = Custom/CKTextField.m; sourceTree = "<group>"; };
+		F447CED81A7E8CB80016AD90 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		F4496DE01A6E49CD00944E67 /* CKConnectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKConnectionView.h; path = ViewControllers/CKConnectionView.h; sourceTree = "<group>"; };
 		F4496DE11A6E49CD00944E67 /* CKConnectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKConnectionView.m; path = ViewControllers/CKConnectionView.m; sourceTree = "<group>"; };
 		F4496DE31A6E4AE600944E67 /* CKCircleMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKCircleMenu.h; path = ViewControllers/CKCircleMenu.h; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F447CED91A7E8CB80016AD90 /* Social.framework in Frameworks */,
 				F4F413B41A77AD4100CBAC7C /* libsqlite3.dylib in Frameworks */,
 				F4F413B01A77AD2800CBAC7C /* libz.dylib in Frameworks */,
 				F4F413AE1A77ACFA00CBAC7C /* StoreKit.framework in Frameworks */,
@@ -331,6 +334,7 @@
 		28F94C00466E9E7EC2A5BF4E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F447CED81A7E8CB80016AD90 /* Social.framework */,
 				F4F413B31A77AD4100CBAC7C /* libsqlite3.dylib */,
 				F4F413B11A77AD3400CBAC7C /* libsqlite3.0.dylib */,
 				F4F413AF1A77AD2800CBAC7C /* libz.dylib */,

@@ -20,8 +20,10 @@
 #import "CKSourceController.h"
 
 #import "CAGradientLayer+CKGradients.h"
+#import "MBProgressHUD.h"
+#import "NSString+Icons.h"
 
-@interface CKIntroSignupViewController2 () <CKSourceLoginDelegate>
+@interface CKIntroSignupViewController2 () <CKSourceLoginDelegate, MBProgressHUDDelegate>
 {
     NSString* _name;
     NSString* _email;
@@ -36,6 +38,8 @@
     NSDictionary* facebookDict;
     NSDictionary* twitterDict;
     NSDictionary* linkedinDict;
+    
+    MBProgressHUD* notificationView;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *optionLabel;
@@ -153,7 +157,7 @@
 }
 
 - (void)saveProfile:(id)sender {
-    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
+    /*CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
     CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
     
     newContact.name = _name;
@@ -163,7 +167,7 @@
     
     [[NSUserDefaults standardUserDefaults] setValue:newContact.guid forKey:kCurrentProfileString];
     
-    //[self.navigationController pushViewController:[CKHelper viewControllerWithId:@"rootController"] animated:YES];
+    //[self.navigationController pushViewController:[CKHelper viewControllerWithId:@"rootController"] animated:YES];*/
     CKRootViewController* vc = (CKRootViewController*)[CKHelper viewControllerWithId:@"rootController"];
     vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     [self presentViewController:vc animated:YES completion:nil];
@@ -226,12 +230,15 @@
 - (void)didNotLogin:(CKSourceBase *)source {
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
+        [self showNotification:@"Failed to login in Facebook" isError:YES];
         [self setBorderWidth:0.0f forButton:self.fbButton];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
+        [self showNotification:@"Failed to login in Twitter" isError:YES];
         [self setBorderWidth:0.0f forButton:self.twitterButton];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
+        [self showNotification:@"Failed to login in LinkedIn" isError:YES];
         [self setBorderWidth:.0f forButton:self.linkedinButton];
     }
 }
@@ -239,14 +246,50 @@
 - (void)didLogout:(CKSourceBase *)source {
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
+        [self showNotification:@"Logged out of Facebook" isError:NO];
         [self setBorderWidth:0.0f forButton:self.fbButton];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
+        [self showNotification:@"Logged out of Twitter" isError:NO];
         [self setBorderWidth:0.0f forButton:self.twitterButton];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
+        [self showNotification:@"Logged out of LinkedIn" isError:NO];
         [self setBorderWidth:0.0f forButton:self.linkedinButton];
     }
 }
+
+#pragma mark
+- (void)showNotification:(NSString*)text isError:(BOOL)isError {
+    notificationView = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:notificationView];
+    
+    UILabel* label = [[UILabel alloc] init];
+    label.font = [UIFont iconFontWithSize:16];
+    
+    if (isError) {
+        label.text = [NSString iconStringForEnum:FUICrossCircle];
+    } else {
+        label.text = [NSString iconStringForEnum:FUICheckCircle];
+    }
+    
+    notificationView.customView = label;
+    
+    // Set custom view mode
+    notificationView.mode = MBProgressHUDModeCustomView;
+    
+    notificationView.delegate = self;
+    notificationView.labelText = text;
+    
+    [notificationView show:YES];
+    [notificationView hide:YES afterDelay:3];
+}
+
+#pragma mark MBProgressHUDDelegate
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+    [notificationView removeFromSuperview];
+}
+
 
 @end

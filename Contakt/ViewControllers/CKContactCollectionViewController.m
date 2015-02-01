@@ -117,11 +117,6 @@ static NSString * const reuseIdentifier = @"contactCell";
 
 #pragma mark - UISearchBarDelegate
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [searchBar resignFirstResponder];
-    [searchController setActive:NO];
-}
-
 #pragma mark - UISearchControllerDelegate
 
 #pragma mark - UISearchResultsUpdating
@@ -129,6 +124,14 @@ static NSString * const reuseIdentifier = @"contactCell";
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchViewController {
     [self performSearchWithText:searchViewController.searchBar.text];
     [self.collectionView reloadData];
+}
+
+#pragma mark 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"scan"]) {
+        CKQRCodeReaderViewController* vc = (CKQRCodeReaderViewController*)segue.destinationViewController;
+        vc.delegate = self;
+    }
 }
 
 #pragma mark CKQRCodeReaderDelegate
@@ -139,13 +142,6 @@ static NSString * const reuseIdentifier = @"contactCell";
     [[CKCoreDataStack defaultStack] saveContext];
     
     [self.collectionView reloadData];
-}
-
-#pragma mark
-
-- (IBAction)addContact:(id)sender {
-    CKQRCodeReaderViewController* vc = [[CKQRCodeReaderViewController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
 }
 
 #pragma mark UICollectionViewDataSource

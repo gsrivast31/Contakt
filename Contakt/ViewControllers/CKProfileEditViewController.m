@@ -25,8 +25,9 @@
 #import "CHTumblrMenuView.h"
 #import "CKMediaController.h"
 #import "MGSwipeButton.h"
+#import "MBProgressHUD.h"
 
-@interface CKProfileEditViewController () <CKSourceLoginDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, MGSwipeTableCellDelegate>
+@interface CKProfileEditViewController () <CKSourceLoginDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIViewControllerTransitioningDelegate, MGSwipeTableCellDelegate, MBProgressHUDDelegate>
 {
     NSString *name;
     NSString *email;
@@ -44,6 +45,8 @@
     NSDictionary* facebookDict;
     NSDictionary* twitterDict;
     NSDictionary* linkedinDict;
+    
+    MBProgressHUD* notificationView;
     
     BOOL anyChanges;
 }
@@ -147,12 +150,20 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     [self loadProfileImage];
 }
 
+- (void)setProfileImage:(UIImage*)image {
+    imageView.contentMode = UIViewContentModeCenter;
+    if (CGRectContainsRect(imageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
+        imageView.contentMode = UIViewContentModeScaleToFill;
+    }
+    imageView.image = image;
+}
+
 - (void)loadProfileImage {
     [[CKMediaController sharedInstance] imageFromParse:contact.guid success:^(UIImage *image) {
-        imageView.image = image;
+        [self setProfileImage:image];
     } failure:^(NSError *error) {
         NSLog(@"%@", [error localizedDescription]);
-        imageView.image = [UIImage imageNamed:@"defaultProfile"];
+        [self setProfileImage:[UIImage imageNamed:@"defaultProfile"]];
     }];
 }
 
@@ -505,14 +516,17 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;
+        [self showNotification:@"Failed to login in Facebook" isError:YES];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
         twitterDict = nil;
+        [self showNotification:@"Failed to login in Twitter" isError:YES];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:4]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
         linkedinDict = nil;
+        [self showNotification:@"Failed to login in LinkedIn" isError:YES];
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:5]] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
@@ -521,17 +535,55 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;
+        [self showNotification:@"Logged out of Facebook" isError:NO];
+
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKTwitterSource class]]) {
         connectTwitter = FALSE;
         twitterDict = nil;
+        [self showNotification:@"Logged out of Twitter" isError:NO];
+
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:4]] withRowAnimation:UITableViewRowAnimationFade];
     } else if ([source isKindOfClass:[CKLinkedInSource class]]) {
         connectLinkedIn = FALSE;
         linkedinDict = nil;
+        [self showNotification:@"Logged out of LinkedIn" isError:NO];
+
         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:5]] withRowAnimation:UITableViewRowAnimationFade];
     }
     anyChanges = TRUE;
+}
+
+#pragma mark
+- (void)showNotification:(NSString*)text isError:(BOOL)isError {
+    notificationView = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:notificationView];
+    
+    UILabel* label = [[UILabel alloc] init];
+    label.font = [UIFont iconFontWithSize:16];
+    
+    if (isError) {
+        label.text = [NSString iconStringForEnum:FUICrossCircle];
+    } else {
+        label.text = [NSString iconStringForEnum:FUICheckCircle];
+    }
+    
+    notificationView.customView = label;
+    
+    // Set custom view mode
+    notificationView.mode = MBProgressHUDModeCustomView;
+    
+    notificationView.delegate = self;
+    notificationView.labelText = text;
+    
+    [notificationView show:YES];
+    [notificationView hide:YES afterDelay:3];
+}
+
+#pragma mark MBProgressHUDDelegate
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+    [notificationView removeFromSuperview];
 }
 
 #pragma mark MGSwipeTableCellDelegate

@@ -20,19 +20,27 @@
 
 @implementation CKContactCollectionViewCell
 
+- (void)setProfileImage:(UIImage*)image {
+    self.profileImageView.contentMode = UIViewContentModeCenter;
+    if (CGRectContainsRect(self.profileImageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
+        self.profileImageView.contentMode = UIViewContentModeScaleToFill;
+    }
+    self.profileImageView.image = image;
+}
+
 - (void) configureCellForContact:(CKContact *)contact {
     __weak typeof(self) weakSelf = self;
     [[CKMediaController sharedInstance] imageFromParse:contact.guid success:^(UIImage *image) {
         __strong typeof(weakSelf) strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (image)
-                strongSelf.profileImageView.image = image;
+                [strongSelf setProfileImage:image];
             else
-                strongSelf.profileImageView.image = [UIImage imageNamed:@"defaultProfile"];
+                [strongSelf setProfileImage:[UIImage imageNamed:@"defaultProfile"]];
         });
     } failure:^(NSError *error) {
         __strong typeof(weakSelf) strongSelf = self;
-        strongSelf.profileImageView.image = [UIImage imageNamed:@"defaultProfile"];
+        [strongSelf setProfileImage:[UIImage imageNamed:@"defaultProfile"]];
     }];
     
     if (contact.name) {
@@ -43,6 +51,7 @@
     }
 
     self.profileImageView.alpha = 0.5f;
+    
     
     self.layer.borderColor = [[UIColor colorWithRed:0.0f green:192.0f/255.0f blue:180.0f/255.0f alpha:1.0f] CGColor];
     self.layer.borderWidth = 2.0f;

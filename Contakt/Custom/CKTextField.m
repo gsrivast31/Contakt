@@ -79,11 +79,14 @@
     [toolbar setBarStyle:UIBarStyleDefault];
     
     self.previousBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Previous", @"Previous") style:UIBarButtonItemStylePlain target:self action:@selector(previousButtonIsClicked:)];
+    self.previousBarButton.tintColor = [UIColor turquoiseColor];
     self.nextBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Next", @"Next") style:UIBarButtonItemStylePlain target:self action:@selector(nextButtonIsClicked:)];
+    self.nextBarButton.tintColor = [UIColor turquoiseColor];
     
     UIBarButtonItem *flexBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonIsClicked:)];
+    doneBarButton.tintColor = [UIColor turquoiseColor];
     
     NSArray *barButtonItems = @[self.previousBarButton, self.nextBarButton, flexBarButton, doneBarButton];
     
@@ -204,6 +207,16 @@
     [_textField setText:[dateFormatter stringFromDate:selectedDate]];
     
     [self validate];
+}
+
+- (void)selectKeyboardType:(UITextField*)textField {
+    if (_isEmailField) {
+        textField.keyboardType = UIKeyboardTypeEmailAddress;
+    } else if(_isNumberField) {
+        textField.keyboardType = UIKeyboardTypePhonePad;
+    } else {
+        textField.keyboardType = UIKeyboardTypeDefault;
+    }
 }
 
 - (void)scrollToField
@@ -333,6 +346,7 @@
     }
     
     [self selectInputView:textField];
+    [self selectKeyboardType:textField];
     [self setInputAccessoryView:toolbar];
     
     [self setToolbarCommand:NO];

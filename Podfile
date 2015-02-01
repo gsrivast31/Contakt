@@ -12,12 +12,12 @@ pod 'REComposeViewController', '~> 2.3.2'
 pod 'FXBlurView'
 pod 'UAAppReviewManager', '~> 0.2.6'
 pod 'SimpleAuth/FacebookWeb'
-pod 'SimpleAuth/Facebook'
 pod 'SimpleAuth/LinkedInWeb'
 pod 'SimpleAuth/TwitterWeb'
-pod 'SimpleAuth/Twitter'
 pod 'MGSwipeTableCell'
 pod 'SAMCache'
+pod 'MBProgressHUD', '~> 0.8'
+pod 'Surfboard'
 
 end
 

@@ -22,6 +22,14 @@
 
 @implementation CKProfileViewCell
 
+- (void)setProfileImage:(UIImage*)image {
+    self.profileImageView.contentMode = UIViewContentModeCenter;
+    if (CGRectContainsRect(self.profileImageView.bounds, CGRectMake(CGRectZero.origin.x, CGRectZero.origin.y, image.size.width, image.size.height))) {
+        self.profileImageView.contentMode = UIViewContentModeScaleToFill;
+    }
+    self.profileImageView.image = image;
+}
+
 - (void)loadQRCode:(CKContact*)contact {
     if (contact != nil) {
         __weak typeof(self) weakSelf = self;
@@ -44,9 +52,9 @@
     [self loadQRCode:contact];
     
     [[CKMediaController sharedInstance] imageFromParse:contact.guid success:^(UIImage *image) {
-        self.profileImageView.image = image;
+        [self setProfileImage:image];
     } failure:^(NSError* error){
-        self.profileImageView.image = [UIImage imageNamed:@"defaultProfile"];
+        [self setProfileImage:[UIImage imageNamed:@"defaultProfile"]];
         NSLog(@"%@", [error localizedDescription]);
     }];
     
@@ -71,7 +79,7 @@
     self.qrImageView.clipsToBounds = YES;
     self.qrImageView.userInteractionEnabled = YES;
 
-    self.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 @end

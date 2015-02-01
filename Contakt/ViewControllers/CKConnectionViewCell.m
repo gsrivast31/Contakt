@@ -41,8 +41,8 @@
     NSString *twitterId = [(CKConnection*)[dict objectForKey:kTwitterString] value];
     NSString *linkedinId = [(CKConnection*)[dict objectForKey:kLinkedInString] value];
     NSString *facebookNativeURL = [CKHelper isStringValid:facebookId] ? [@"fb://profile/" stringByAppendingString:facebookId] : nil;
-    NSString *twitterNativeURL = [CKHelper isStringValid:facebookId] ? [@"twitter://user?id=" stringByAppendingString:twitterId] : nil;
-    NSString *linkedInNativeURL = [CKHelper isStringValid:facebookId] ? [@"linkedin://#profile/" stringByAppendingString:linkedinId] : nil;
+    NSString *twitterNativeURL = [CKHelper isStringValid:twitterId] ? [@"twitter://user?id=" stringByAppendingString:twitterId] : nil;
+    NSString *linkedInNativeURL = [CKHelper isStringValid:linkedinId] ? [@"linkedin://#profile/" stringByAppendingString:linkedinId] : nil;
                                                                    
     self.fbButton.titleLabel.font = [UIFont iconFontWithSize:16];
     self.fbButton.buttonColor = [UIColor colorFromHexCode:@"3b5998"];
@@ -141,7 +141,7 @@
         self.linkedinButton.enabled = NO;
     }
 
-    self.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 @end
