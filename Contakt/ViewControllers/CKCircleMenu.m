@@ -151,7 +151,7 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 }
 
 - (void)addTitle {
-    CGRect titleFrame = CGRectMake(10.0f, self.menu.frame.origin.y - 50.0f, self.frame.size.width - 20.0f, 30.0f);
+    CGRect titleFrame = CGRectMake(10.0f, self.menu.frame.origin.y + self.menu.frame.size.height + 30.0f, self.frame.size.width - 20.0f, 30.0f);
     titleLabel_ = [[UILabel alloc] initWithFrame:titleFrame];
     titleLabel_.text = contact_.name;
     titleLabel_.textAlignment = NSTextAlignmentCenter;

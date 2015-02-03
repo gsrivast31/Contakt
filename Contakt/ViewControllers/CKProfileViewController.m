@@ -77,6 +77,7 @@ static NSString * const reuseIdentifier2 = @"connectionViewCell";
 - (void)showQRCode:(UIGestureRecognizer*)gesture {
     TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithImage:self.qrImageView.image];
     viewController.transitioningDelegate = self;
+    viewController.title = self.contact.name;
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

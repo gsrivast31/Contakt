@@ -320,9 +320,9 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    
+    imageView.image = image;
     [[CKMediaController sharedInstance] saveToParse:image forUser:self.contact.guid success:^{
-        imageView.image = image;
+        //imageView.image = image;
     } failure:^(NSError *error) {
         NSLog(@"Failed to save file : %@", [error localizedDescription]);
     }];

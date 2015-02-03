@@ -18,12 +18,16 @@
 #import <MessageUI/MessageUI.h>
 #import "SVWebViewController.h"
 
-@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
+#import "NSString+Icons.h"
+#import "MBProgressHUD.h"
+
+@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating, MBProgressHUDDelegate>
 {
     UISearchController* searchController;
     UIView* searchView;
     
     NSArray *searchResults;
+    MBProgressHUD* notificationView;
 }
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
@@ -138,10 +142,15 @@ static NSString * const reuseIdentifier = @"contactCell";
 
 - (void)didReadQRCode:(NSString *)string {
     CKContact* contact = [CKHelper deserialize:string];
-    NSLog(@"%@", contact.guid);
-    [[CKCoreDataStack defaultStack] saveContext];
     
-    [self.collectionView reloadData];
+    if (contact == nil) {
+        [self showNotification:@"Not a valid QR code" isError:YES];
+    } else {
+        NSLog(@"%@", contact.guid);
+        [[CKCoreDataStack defaultStack] saveContext];
+    
+        [self.collectionView reloadData];
+    }
 }
 
 #pragma mark UICollectionViewDataSource
@@ -442,6 +451,38 @@ static NSString * const reuseIdentifier = @"contactCell";
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark
+- (void)showNotification:(NSString*)text isError:(BOOL)isError {
+    notificationView = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:notificationView];
+    
+    UILabel* label = [[UILabel alloc] init];
+    label.font = [UIFont iconFontWithSize:16];
+    
+    if (isError) {
+        label.text = [NSString iconStringForEnum:FUICrossCircle];
+    } else {
+        label.text = [NSString iconStringForEnum:FUICheckCircle];
+    }
+    
+    notificationView.customView = label;
+    
+    // Set custom view mode
+    notificationView.mode = MBProgressHUDModeCustomView;
+    
+    notificationView.delegate = self;
+    notificationView.labelText = text;
+    
+    [notificationView show:YES];
+    [notificationView hide:YES afterDelay:3];
+}
+
+#pragma mark MBProgressHUDDelegate
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+    [notificationView removeFromSuperview];
 }
 
 @end

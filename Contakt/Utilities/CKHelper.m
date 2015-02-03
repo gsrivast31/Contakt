@@ -78,6 +78,7 @@
 + (NSString*)serialize:(CKContact*)contact {
     NSDictionary* dict = [CKHelper connectionDictionary:contact];
     NSArray* strings = [[NSArray alloc] initWithObjects:
+                        [self encodeString:kAppUniqueId],
                         [self encodeString:contact.guid],
                         [self encodeString:[dict objectForKey:kNameString]],
                         [self encodeString:[(CKConnection*)[dict objectForKey:kEmailString] value]],
@@ -94,40 +95,49 @@
 
 + (CKContact*)deserialize:(NSString *)string {
     NSArray* strings = [string componentsSeparatedByString:@"|"];
+
+    if ([strings count] != 11) {
+        return nil;
+    }
+    
+    BOOL isContakt = [[self decodeString:[strings objectAtIndex:0]] isEqualToString:kAppUniqueId] ;
+    if (isContakt == FALSE) {
+        return nil;
+    }
     
     CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
     CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
     
-    newContact.guid = [self decodeString:[strings objectAtIndex:0]];
-    newContact.name = [self decodeString:[strings objectAtIndex:1]];
+    newContact.guid = [self decodeString:[strings objectAtIndex:1]];
+    newContact.name = [self decodeString:[strings objectAtIndex:2]];
 
     CKConnection *emailConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     emailConnection.type = CKEmailType;
-    emailConnection.value = [self decodeString:[strings objectAtIndex:2]];
+    emailConnection.value = [self decodeString:[strings objectAtIndex:3]];
     emailConnection.share = YES;
     
     CKConnection *phoneConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     phoneConnection.type = CKPhoneType;
-    phoneConnection.value = [self decodeString:[strings objectAtIndex:3]];
+    phoneConnection.value = [self decodeString:[strings objectAtIndex:4]];
     phoneConnection.share = YES;
 
     CKConnection *fbConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     fbConnection.type = CKFacebookType;
     fbConnection.share = YES;
-    fbConnection.value = [self decodeString:[strings objectAtIndex:4]];
-    fbConnection.profileUrl = [self decodeString:[strings objectAtIndex:5]];
+    fbConnection.value = [self decodeString:[strings objectAtIndex:5]];
+    fbConnection.profileUrl = [self decodeString:[strings objectAtIndex:6]];
     
     CKConnection *twitterConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     twitterConnection.type = CKTwitterType;
     twitterConnection.share = YES;
-    twitterConnection.value = [self decodeString:[strings objectAtIndex:6]];
-    twitterConnection.profileUrl = [self decodeString:[strings objectAtIndex:7]];
+    twitterConnection.value = [self decodeString:[strings objectAtIndex:7]];
+    twitterConnection.profileUrl = [self decodeString:[strings objectAtIndex:8]];
     
     CKConnection *linkedInConnection = [NSEntityDescription insertNewObjectForEntityForName:@"CKConnection" inManagedObjectContext:[CKCoreDataStack defaultStack].managedObjectContext];
     linkedInConnection.type = CKLinkedInType;
     linkedInConnection.share = YES;
-    linkedInConnection.value = [self decodeString:[strings objectAtIndex:8]];
-    linkedInConnection.profileUrl = [self decodeString:[strings objectAtIndex:9]];
+    linkedInConnection.value = [self decodeString:[strings objectAtIndex:9]];
+    linkedInConnection.profileUrl = [self decodeString:[strings objectAtIndex:10]];
     
     newContact.connections = [[NSSet alloc] initWithObjects:emailConnection, phoneConnection, fbConnection, twitterConnection, linkedInConnection, nil];
     
