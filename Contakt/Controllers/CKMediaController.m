@@ -234,7 +234,18 @@
             }];
             [task resume];
         } else {
-            failureCallback(error);
+            if (error.code == 101) { //image does not exist
+                UIImage* image = [UIImage imageNamed:@"defaultProfile"];
+                [[SAMCache sharedCache] setImage:image forKey:user];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    successCallback(image);
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failureCallback(error);
+                });
+            }
         }
     }];
 }
