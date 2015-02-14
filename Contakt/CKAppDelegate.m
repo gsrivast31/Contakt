@@ -16,6 +16,7 @@
 
 #import "CKIntroViewController.h"
 
+#import "CKContact.h"
 #import <UAAppReviewManager/UAAppReviewManager.h>
 #import <Parse/Parse.h>
 
@@ -64,6 +65,12 @@
     [[CKSourceController sharedInstance] addSource:facebookSource forKey:kFacebookString];
     [[CKSourceController sharedInstance] addSource:twitterSource forKey:kTwitterString];
     [[CKSourceController sharedInstance] addSource:linkedInSource forKey:kLinkedInString];
+}
+
+- (void)defaultContakt:(NSString*)name {
+    CKCoreDataStack *coreDataStack = [CKCoreDataStack defaultStack];
+    CKContact *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"CKContact" inManagedObjectContext:coreDataStack.managedObjectContext];
+    newContact.name = name;
 }
 
 - (void)setupStyling {

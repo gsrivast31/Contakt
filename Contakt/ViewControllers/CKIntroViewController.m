@@ -25,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.backgroundColor = [UIColor colorFromHexCode:@"282F3B"];
-    self.tintColor = [UIColor turquoiseColor];
+    //self.tintColor = [UIColor turquoiseColor];
 }
 
 - (void)didReceiveMemoryWarning {

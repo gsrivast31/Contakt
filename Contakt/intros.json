@@ -1,15 +1,23 @@
  [
   {
-  "text" : "Welcome to ContaktMe.",
-  "image" : "facebook_circle",
+  "text" : "Welcome to ContaktMe.\nIt takes the pain out of contact sharing when you meet someone new at an event. Start with creating your profile.",
+  "image" : "screen_1",
   },
   {
-  "text" : "Surfboard makes it delightfully easy to craft onboarding experiences.",
-  "image" : "linkedin_circle",
+  "text" : "Also attach your networks which you want to share. This is just a one time effort. ContaktMe would generate a QR code from this information.",
+  "image" : "screen_2",
   },
   {
-  "text" : "If you like Surfboard give me a shoutout on Twitter.\nI'm @bermaniastudios.",
-  "image" : "twitter_circle",
-  "button" : "Create my contakt card"
+  "text" : "When you want to share your information, just ask the person to scan your QR code through ContaktMe application.",
+  "image" : "screen_3",
+  },
+  {
+  "text" : "When you want to get someone's information, tap the '+' button on homescreen to scan his QR code.",
+  "image" : "screen_4",
+  },
+  {
+  "text" : "A scan would make you instantly follow him across all his shared networks.",
+  "image" : "screen_5",
+  "button" : "CREATE MY CONTAKT CARD"
   }
   ]

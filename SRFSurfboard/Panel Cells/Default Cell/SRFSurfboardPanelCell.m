@@ -14,12 +14,6 @@
 
 @interface SRFSurfboardPanelCell ()
 
-/**
- *  The device image.
- */
-
-@property (weak, nonatomic) IBOutlet UIImageView *deviceImage;
-
 @end
 
 @implementation SRFSurfboardPanelCell
@@ -48,7 +42,11 @@
     if (self.imageView.image.renderingMode != UIImageRenderingModeAlwaysTemplate)
     {
         self.imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        self.imageView.layer.borderWidth = 1.0f;
+        self.imageView.layer.borderWidth = 3.0f;
+        self.imageView.layer.cornerRadius = 20.0f;
+        self.imageView.layer.masksToBounds = YES;
+        self.imageView.clipsToBounds = YES;
+        
     }
     else
     {
@@ -75,11 +73,9 @@
     
     self.contentView.frame = self.bounds;
     self.actionButton.layer.cornerRadius = 5.0f;
-    self.actionButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
+    self.actionButton.backgroundColor = [[UIColor turquoiseColor] colorWithAlphaComponent:0.2];
     
     self.textView.textColor = self.tintColor;
-    
-    self.deviceImage.image = [self.deviceImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [self.actionButton setTitleColor:self.tintColor forState:UIControlStateNormal];
     

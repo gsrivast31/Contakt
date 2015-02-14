@@ -31,7 +31,7 @@
     if (self)
     {
         _text = configuration[@"text"];
-        _image = [[UIImage imageNamed:configuration[@"image"]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        _image = [[UIImage imageNamed:configuration[@"image"]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         
         if ([configuration.allKeys containsObject:@"screen"])
         {

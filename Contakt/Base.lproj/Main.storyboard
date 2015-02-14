@@ -9,7 +9,7 @@
         <scene sceneID="xY6-U8-Q6K">
             <objects>
                 <collectionViewController storyboardIdentifier="contactsViewController" id="QGt-5w-D0j" customClass="CKContactCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="17v-yY-QDd">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" id="17v-yY-QDd">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewLayout key="collectionViewLayout" id="k4A-WU-PIM" customClass="KRLCollectionViewGridLayout"/>
