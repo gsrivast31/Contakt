@@ -33,6 +33,7 @@ NS_ENUM(int16_t, CKImageType)
 };
 
 static NSString* const kAppUniqueId = @"com.memoir.contaktme";
+static NSString* const APP_ID = @"";
 
 static NSString* const kNameString = @"Name";
 static NSString* const kEmailString = @"Email";
