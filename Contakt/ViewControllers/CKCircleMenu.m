@@ -35,6 +35,7 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
 @synthesize menu           = menu_;
 @synthesize centerButton   = centerButton_;
 @synthesize titleLabel     = titleLabel_;
+@synthesize saveButton     = saveButton_;
 @synthesize isOpening      = isOpening_;
 @synthesize isInProcessing = isInProcessing_;
 @synthesize isClosed       = isClosed_;
@@ -103,6 +104,7 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
     [self addMenuOptions];
     [self addCenterButton];
     [self addTitle];
+ //   [self addSaveButton];
 }
 
 - (void)didMoveToSuperview {
@@ -160,7 +162,22 @@ static CGFloat defaultTriangleHypotenuse_, minBounceOfTriangleHypotenuse_, maxBo
     [self addSubview:titleLabel_];
 }
 
+- (void)addSaveButton {
+    CGRect buttonFrame = CGRectMake((self.frame.size.width - 300.0f)/2.0f, titleLabel_.frame.origin.y + titleLabel_.frame.size.height + 20.0f, 300.0f, 40.0f);
+    saveButton_ = [[UIButton alloc] initWithFrame:buttonFrame];
+    [saveButton_ setTitle:@"Save to address book" forState:UIControlStateNormal];
+    [saveButton_ setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [saveButton_.titleLabel setFont:[UIFont flatFontOfSize:17]];
+    [saveButton_ setBackgroundColor:[UIColor turquoiseColor]];
+    [saveButton_ addTarget:self action:@selector(saveContact:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:saveButton_];
+}
+
 #pragma mark - Publich Button Action
+
+- (void)saveContact:(id)sender {
+    
+}
 
 - (void)runButtonActions:(id)sender {
     shouldRecoverToNormalStatusWhenViewWillAppear_ = YES;

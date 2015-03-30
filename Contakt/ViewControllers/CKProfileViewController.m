@@ -19,6 +19,8 @@
 #import "TGRImageZoomAnimationController.h"
 #import "SVWebViewController.h"
 
+#import <MBProgressHUD/MBProgressHUD.h>
+
 @interface CKProfileViewController () <UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) CKContact *contact;
@@ -147,17 +149,14 @@ static NSString * const reuseIdentifier2 = @"connectionViewCell";
 #pragma mark UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-    if ([presented isKindOfClass:TGRImageViewController.class])
-    {
+    if ([presented isKindOfClass:TGRImageViewController.class]) {
         return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:self.qrImageView];
     }
     return nil;
 }
 
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
-{
-    if ([dismissed isKindOfClass:TGRImageViewController.class])
-    {
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    if ([dismissed isKindOfClass:TGRImageViewController.class]) {
         return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:self.qrImageView];
     }
     return nil;

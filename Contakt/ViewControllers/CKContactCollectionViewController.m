@@ -21,13 +21,14 @@
 #import "NSString+Icons.h"
 #import "MBProgressHUD.h"
 
-@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating, MBProgressHUDDelegate>
+@interface CKContactCollectionViewController () <NSFetchedResultsControllerDelegate, CKQRCodeReaderDelegate, UISearchBarDelegate, CKConnectionViewDelegate, MFMailComposeViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating, MBProgressHUDDelegate, UIAlertViewDelegate>
 {
     UISearchController* searchController;
     UIView* searchView;
     
     NSArray *searchResults;
     MBProgressHUD* notificationView;
+    NSString* phoneString;
 }
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
@@ -401,12 +402,13 @@ static NSString * const reuseIdentifier = @"contactCell";
     } else if (type == CKPhoneType) {
         NSString *phone = [(CKConnection*)[dict objectForKey:kPhoneString] value];
         if ([CKHelper isStringValid:phone]) {
-            NSString* phoneNumber = [@"tel://" stringByAppendingString:phone];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+            phoneString = phone;
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil message:phoneString delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Call", nil];
+            [alertView show];
         }
     } else if (type == CKFacebookType) {
         NSString* fbId = [(CKConnection*)[dict objectForKey:kFacebookString] value];
-        NSURL* fbURL = [NSURL URLWithString:[@"fb://profile/" stringByAppendingString:fbId]];
+        NSURL* fbURL = fbId ? [NSURL URLWithString:[@"fb://profile/" stringByAppendingString:fbId]] : nil;
         if ([CKHelper isStringValid:fbId] && [[UIApplication sharedApplication] canOpenURL:fbURL]) {
             [[UIApplication sharedApplication] openURL:fbURL];
         } else {
@@ -418,7 +420,7 @@ static NSString * const reuseIdentifier = @"contactCell";
         }
     } else if (type == CKTwitterType) {
         NSString* twitterId = [(CKConnection*)[dict objectForKey:kTwitterString] value];
-        NSURL* twitterURL = [NSURL URLWithString:[@"twitter://user?id=" stringByAppendingString:twitterId]];
+        NSURL* twitterURL = twitterId ? [NSURL URLWithString:[@"twitter://user?id=" stringByAppendingString:twitterId]] : nil;
         if ([CKHelper isStringValid:twitterId] && [[UIApplication sharedApplication] canOpenURL:twitterURL]) {
             [[UIApplication sharedApplication] openURL:twitterURL];
         } else {
@@ -428,9 +430,9 @@ static NSString * const reuseIdentifier = @"contactCell";
                 [self.navigationController pushViewController:vc animated:YES];
             }
         }
-    } else if (type == CKPhoneType) {
+    } else if (type == CKLinkedInType) {
         NSString* linkedinId = [(CKConnection*)[dict objectForKey:kLinkedInString] value];
-        NSURL* linkedInURL = [NSURL URLWithString:[@"linkedin://#profile/" stringByAppendingString:linkedinId]];
+        NSURL* linkedInURL = linkedinId ? [NSURL URLWithString:[@"linkedin://#profile/" stringByAppendingString:linkedinId]] : nil;
         if ([CKHelper isStringValid:linkedinId] && [[UIApplication sharedApplication] canOpenURL:linkedInURL]) {
             [[UIApplication sharedApplication] openURL:linkedInURL];
         } else {
@@ -483,6 +485,19 @@ static NSString * const reuseIdentifier = @"contactCell";
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
     [notificationView removeFromSuperview];
+}
+
+#pragma mark UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        if (buttonIndex == alertView.firstOtherButtonIndex) {
+            NSURL* phoneURL = [NSURL URLWithString:[@"tel://" stringByAppendingString:phoneString]];
+            if ([[UIApplication sharedApplication] canOpenURL:phoneURL]) {
+                [[UIApplication sharedApplication] openURL:phoneURL];
+            }
+        }
+    }
 }
 
 @end

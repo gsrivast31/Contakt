@@ -88,7 +88,10 @@
                 MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
                 [mailController setMailComposeDelegate:self];
                 [mailController setModalPresentationStyle:UIModalPresentationFormSheet];
-                [mailController setSubject:@"Checkout this app:Contakt"];
+                [mailController setSubject:[NSString stringWithFormat:@"Checkout this:%@", APP_NAME]];
+                
+                NSString *body = [NSString stringWithFormat:@"Hey! I found this cool app <b><u><a href='%@'>%@</a></u></b>. Check it out.", APP_URL, APP_NAME];
+                [mailController setMessageBody:body isHTML:YES];
                 if(mailController) {
                     [self presentViewController:mailController animated:YES completion:nil];
                 }
@@ -100,7 +103,7 @@
                                                           otherButtonTitles:nil];
                 [alertView show];
             }
-
+            
             [self.sideMenuViewController hideMenuViewController];
             break;
         case 4:
@@ -136,15 +139,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.backgroundColor = [UIColor clearColor];
         cell.textLabel.font = [UIFont iconFontWithSize:18.0f];
-        cell.textLabel.textColor = [UIColor turquoiseColor];
-        cell.textLabel.alpha = 0.7f;
+        cell.textLabel.textColor = [UIColor colorWithWhite:0.0f alpha:0.45f];
         cell.textLabel.highlightedTextColor = [UIColor lightGrayColor];
         cell.selectedBackgroundView = [[UIView alloc] init];
     }
     
     NSArray *titles = @[@"Friends", @"Profile", @"Give Feedback", @"Tell a Friend", @"Rate Us"];
-    NSArray *images = @[[NSString iconStringForEnum:FUIHome], [NSString iconStringForEnum:FUIUser], [NSString iconStringForEnum:FUIMail], [NSString iconStringForEnum:FUIChat], [NSString iconStringForEnum:FUIStar2]];
-    cell.textLabel.text = [images[indexPath.row] stringByAppendingFormat:@" %@", titles[indexPath.row]];
+    NSArray *images = @[@"home", @"profile", @"mail", @"message", @"rate"];
+    cell.textLabel.text = titles[indexPath.row];
+    cell.imageView.image = [UIImage imageNamed:images[indexPath.row]];
     
     return cell;
 }

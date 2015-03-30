@@ -16,6 +16,6 @@ profile
 *.moved-aside
 DerivedData
 .idea/
-Contakt/Utilities/CKCredentials.h
+#Contakt/Utilities/CKCredentials.h
 # Pods - for those of you who use CocoaPods
-Pods
+#Pods

@@ -89,6 +89,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
         
         UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeUser:)];
         [changeUserLabel addGestureRecognizer:tapGesture];
+        //[imageView addGestureRecognizer:tapGesture];
         
         [view addSubview:imageView];
         [view addSubview:changeUserLabel];
@@ -189,43 +190,88 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     [menuView addMenuItemWithTitle:@"Facebook" andIcon:[UIImage imageNamed:@"facebook_circle"] andSelectedBlock:^{
         NSString* imageUrl = facebookDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageFacebook], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
                 [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
                     imageView.image = image;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
                 } failure:^(NSError *error) {
                     NSLog(@"%@", [error localizedDescription]);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [self showNotification:@"Failed to fetch photo from Facebook." isError:YES];
+                    });
                 }];
             } failure:^(NSError *error){
                 NSLog(@"%@", [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [self showNotification:@"Failed to fetch photo from Facebook." isError:YES];
+                });
             }];
+        } else {
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You need to login to Facebook." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
         }
     }];
     [menuView addMenuItemWithTitle:@"Twitter" andIcon:[UIImage imageNamed:@"twitter_circle"] andSelectedBlock:^{
         NSString* imageUrl = twitterDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageTwitter], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
                     imageView.image = image;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
                 } failure:^(NSError *error) {
                     NSLog(@"%@", [error localizedDescription]);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [self showNotification:@"Failed to fetch photo from Twitter." isError:YES];
+                    });
                 }];
             } failure:^(NSError *error){
                 NSLog(@"%@", [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [self showNotification:@"Failed to fetch photo from Twitter." isError:YES];
+                });
             }];
+        } else {
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You need to login to Twitter." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
         }
     }];
     [menuView addMenuItemWithTitle:@"LinkedIn" andIcon:[UIImage imageNamed:@"linkedin_circle"] andSelectedBlock:^{
         NSString* imageUrl = linkedinDict[kProfileImageUrl];
         if ([CKHelper isStringValid:imageUrl]) {
             [[CKMediaController sharedInstance] imageFromURL:@{@"pathType":[NSNumber numberWithInt:CKImageLinkedIn], @"id":contact.guid, @"url":imageUrl} success:^(UIImage *image) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 [[CKMediaController sharedInstance] saveToParse:image forUser:contact.guid success:^{
                     imageView.image = image;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
                 } failure:^(NSError *error) {
                     NSLog(@"%@", [error localizedDescription]);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [self showNotification:@"Failed to fetch photo from LinkedIn." isError:YES];
+                    });
                 }];
             } failure:^(NSError *error){
                 NSLog(@"%@", [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [self showNotification:@"Failed to fetch photo from LinkedIn." isError:YES];
+                });
             }];
+        } else {
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You need to login to LinkedIn." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
         }
     }];
     [menuView show];
@@ -320,9 +366,9 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    imageView.image = image;
+    [self setProfileImage:image];
     [[CKMediaController sharedInstance] saveToParse:image forUser:self.contact.guid success:^{
-        //imageView.image = image;
+
     } failure:^(NSError *error) {
         NSLog(@"Failed to save file : %@", [error localizedDescription]);
     }];
@@ -439,6 +485,7 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
     if ([source isLoggedIn]) {
         connectFB = !connectFB;
     } else {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [source login:self];
     }
 }
@@ -497,6 +544,9 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 #pragma mark CKSourceLoginDelegate
 
 - (void)didLogin:(CKSourceBase *)source withUserInfo:(NSDictionary *)userInfo {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = TRUE;
         facebookDict = userInfo;
@@ -513,6 +563,10 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 }
 
 - (void)didNotLogin:(CKSourceBase *)source {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;
@@ -532,6 +586,10 @@ static NSString * const reuseIdentifier2 = @"connectionCell";
 }
 
 - (void)didLogout:(CKSourceBase *)source {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    });
+
     if ([source isKindOfClass:[CKFacebookSource class]]) {
         connectFB = FALSE;
         facebookDict = nil;

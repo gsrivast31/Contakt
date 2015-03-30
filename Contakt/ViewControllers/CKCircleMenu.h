@@ -19,6 +19,7 @@
     UIView   * menu_;
     UIButton * centerButton_;
     UILabel  * titleLabel_;
+    UIButton * saveButton_;
     BOOL       isOpening_;
     BOOL       isInProcessing_;
     BOOL       isClosed_;
@@ -27,6 +28,7 @@
 @property (nonatomic, strong) UIView   * menu;
 @property (nonatomic, strong) UIButton * centerButton;
 @property (nonatomic, strong) UILabel  * titleLabel;
+@property (nonatomic, strong) UIButton * saveButton;
 @property (nonatomic, assign) BOOL       isOpening;
 @property (nonatomic, assign) BOOL       isInProcessing;
 @property (nonatomic, assign) BOOL       isClosed;
