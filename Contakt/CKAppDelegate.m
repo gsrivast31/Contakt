@@ -53,7 +53,6 @@
     [UAAppReviewManager showPromptIfNecessary];
     
     [self setupStyling];
-    
     return YES;
 }
 
