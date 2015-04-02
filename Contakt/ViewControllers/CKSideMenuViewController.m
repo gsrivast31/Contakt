@@ -66,7 +66,7 @@
                 MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
                 [mailController setMailComposeDelegate:self];
                 [mailController setModalPresentationStyle:UIModalPresentationFormSheet];
-                [mailController setSubject:@"Contakt Support"];
+                [mailController setSubject:@"ContaktMe Support"];
                 [mailController setToRecipients:@[@"gaurav.sri87@gmail.com"]];
                 [mailController setMessageBody:[NSString stringWithFormat:@"%@\n\n", NSLocalizedString(@"Here's my feedback:", @"A default message shown to users when contacting support for help")] isHTML:NO];
                 if(mailController) {

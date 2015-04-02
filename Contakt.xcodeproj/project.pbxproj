@@ -181,7 +181,7 @@
 		7B02338C3E2F4BC27E4D6EAD /* Pods-Contakt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contakt.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Contakt/Pods-Contakt.debug.xcconfig"; sourceTree = "<group>"; };
 		D81E785CF5E6606A89F27C7F /* libPods-Contakt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Contakt.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E58E68B7F53F67B969971CE9 /* Pods-Contakt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contakt.release.xcconfig"; path = "Pods/Target Support Files/Pods-Contakt/Pods-Contakt.release.xcconfig"; sourceTree = "<group>"; };
-		F427D5881A6A2DFA00A843C1 /* Contakt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contakt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F427D5881A6A2DFA00A843C1 /* ContaktMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContaktMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F427D58C1A6A2DFA00A843C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F427D58D1A6A2DFA00A843C1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F427D58F1A6A2DFA00A843C1 /* CKAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKAppDelegate.h; sourceTree = "<group>"; };
@@ -478,7 +478,7 @@
 		F427D5891A6A2DFA00A843C1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F427D5881A6A2DFA00A843C1 /* Contakt.app */,
+				F427D5881A6A2DFA00A843C1 /* ContaktMe.app */,
 				F427D5A41A6A2DFB00A843C1 /* ContaktTests.xctest */,
 			);
 			name = Products;
@@ -859,7 +859,7 @@
 			);
 			name = Contakt;
 			productName = Contakt;
-			productReference = F427D5881A6A2DFA00A843C1 /* Contakt.app */;
+			productReference = F427D5881A6A2DFA00A843C1 /* ContaktMe.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F427D5A31A6A2DFB00A843C1 /* ContaktTests */ = {
@@ -1223,7 +1223,7 @@
 				INFOPLIST_FILE = Contakt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ContaktMe;
 			};
 			name = Debug;
 		};
@@ -1252,7 +1252,7 @@
 				INFOPLIST_FILE = Contakt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ContaktMe;
 			};
 			name = Release;
 		};

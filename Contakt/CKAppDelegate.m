@@ -34,7 +34,7 @@
     [UAAppReviewManager setUsesUntilPrompt:5];
     [UAAppReviewManager setSignificantEventsUntilPrompt:-1];
     [UAAppReviewManager setDaysBeforeReminding:3];
-    [UAAppReviewManager setReviewMessage:NSLocalizedString(@"If you find Contakt useful you can help support further development by leaving a review on the App Store. It'll only take a minute!", nil)];
+    [UAAppReviewManager setReviewMessage:NSLocalizedString(@"If you find ContaktMe useful you can help support further development by leaving a review on the App Store. It'll only take a minute!", nil)];
 
     [self setupSources];
     
